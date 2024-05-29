@@ -1,0 +1,32 @@
+# Starter pipeline
+name: 1.0.0.$(rev:r)
+variables: 
+- name: Project.Path
+  value: '**/PolyhydraGames.Api.Ollama.csproj'
+- name: BuildConfiguration
+  value: Release
+trigger:
+  branches:
+    include:
+    - refs/heads/main 
+
+jobs:
+- job: Phase_1 
+  cancelTimeoutInMinutes: 1
+  pool:
+    name: Default
+  steps:
+  - checkout: self
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'pack'
+      packagesToPack: '$(Project.Path)' 
+      versioningScheme: 'byBuildNumber'
+      arguments: '-c $(BuildConfiguration)' 
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: '015fc12f-cd63-4ab4-8d6a-dc889e53bf70'

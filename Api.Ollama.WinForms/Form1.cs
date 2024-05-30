@@ -6,7 +6,7 @@ namespace Api.Ollama.WinForms
 {
     public partial class Form1 : Form
     {
-        IOllamaService _service;
+        IAIService _service;
         public Form1()
         {
             InitializeComponent();
@@ -14,7 +14,7 @@ namespace Api.Ollama.WinForms
             {
                 ApiUrl = "https://ollama.polyhydragames.com",
                 Key = "llama3",
-                Name = "llama3"
+                Background = "llama3"
             };
             _service = new OllamaService(new HttpClient(), config);
         }
@@ -26,10 +26,10 @@ namespace Api.Ollama.WinForms
             this.BeginInvoke(async () =>
             { 
 
-                await foreach (var item in _service.GetOllamaListResponse(textBox1.Text))
+                await foreach (var item in _service.GetResponseStream(textBox1.Text))
                 {
-                    Debug.WriteLine(item.Response);
-                    textBox2.Text += item.Response;
+                    Debug.WriteLine(item);
+                    textBox2.Text += item;
                 }
             });
         }

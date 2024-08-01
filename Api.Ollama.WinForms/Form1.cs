@@ -15,7 +15,7 @@ namespace Api.Ollama.WinForms
                 Key = "llama3",
                 Background = "llama3"
             };
-            _service = new OllamaService(new HttpClient(), config);
+            //_service = new OllamaService(new HttpClient(), config);
         }
 
         private   void button1_Click(object sender, EventArgs e)

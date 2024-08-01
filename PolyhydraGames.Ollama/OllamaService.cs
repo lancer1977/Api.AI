@@ -19,11 +19,11 @@ public class OllamaService : IAIService
         _config = config;
         _client = clientFactory.CreateClient();
     }
-    public OllamaService(HttpClient client, IOllamaConfig config)
-    {
-        _config = config;
-        _client = client;
-    }
+    //public OllamaService(HttpClient client, IOllamaConfig config)
+    //{
+    //    _config = config;
+    //    _client = client;
+    //}
 
     private async Task<HttpResponseMessage> GetGenerateResponse(string prompt, string? model = null)
     {

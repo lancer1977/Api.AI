@@ -1,8 +1,7 @@
 using System.Diagnostics;
-using System.Net.Http; 
+using System.Net.Http;
 using Microsoft.Extensions.Configuration;
-using Moq;
-using PolyhydraGames.Ollama.Ollama;
+using Moq; 
 
 namespace PolyhydraGames.Ollama.Test;
 

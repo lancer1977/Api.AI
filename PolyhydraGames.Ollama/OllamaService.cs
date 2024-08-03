@@ -4,15 +4,18 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PolyhydraGames.Core.Interfaces;
 using PolyhydraGames.Ollama.Models;
 
 namespace PolyhydraGames.Ollama;
 
-public class OllamaService : IAIService
+public class OllamaService : IAIService, ILoadAsync
 {
     private readonly IOllamaConfig _config;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
+    private List<ModelDetail> Models { get; set; }
+    private List<string> ModelNames { get; set; }
     public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
     {
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
@@ -24,7 +27,12 @@ public class OllamaService : IAIService
     //    _config = config;
     //    _client = client;
     //}
-
+    public async Task LoadAsync()
+    {
+        var modelResponse = await GetModels();
+        Models = modelResponse.Models;
+        ModelNames = Models.Select(x => x.Model).ToList();
+    }
     private async Task<HttpResponseMessage> GetGenerateResponse(string prompt, string? model = null)
     {
         var payload = new
@@ -55,8 +63,11 @@ public class OllamaService : IAIService
 
     public async Task<string> GetResponseAsync(string prompt, string? model = null)
     {
-
-        var response = await GetGenerateResponse(prompt, model ?? _config.Key);
+        if (string.IsNullOrEmpty(model) || !ModelNames.Contains(model))
+        {
+            model = _config.Key;
+        }
+        var response = await GetGenerateResponse(prompt, model);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();

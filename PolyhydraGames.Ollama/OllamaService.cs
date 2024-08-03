@@ -40,7 +40,7 @@ public class OllamaService : IAIService, ILoadAsync
     {
         var payload = new
         {
-            model = model ?? _config.Key,
+            model = model ?? DefaultModel,
             prompt,
             //prompt = $"{_config.Background}\n\nUser: {userInput}\nDJ Spotabot:",
             stream = false,
@@ -51,7 +51,7 @@ public class OllamaService : IAIService, ILoadAsync
 
         try
         {
-            var endpoint = _config.ApiUrl + "/api/generate";
+            var endpoint = ApiUrl + "/api/generate";
             Debug.WriteLine(endpoint);
             var response = await _client.PostAsync(endpoint, content);
             return response;

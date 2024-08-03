@@ -11,7 +11,9 @@ namespace PolyhydraGames.Ollama;
 
 public class OllamaService : IAIService, ILoadAsync
 {
-    private readonly IOllamaConfig _config;
+    //private readonly IOllamaConfig _config;
+    private string ApiUrl { get; }
+    private string DefaultModel { get; }
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
@@ -19,7 +21,8 @@ public class OllamaService : IAIService, ILoadAsync
     public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
     {
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-        _config = config;
+        DefaultModel = config.Key;
+        ApiUrl = config.ApiUrl;
         _client = clientFactory.CreateClient();
     }
     //public OllamaService(HttpClient client, IOllamaConfig config)
@@ -65,7 +68,7 @@ public class OllamaService : IAIService, ILoadAsync
     {
         if (string.IsNullOrEmpty(model) || !ModelNames.Contains(model))
         {
-            model = _config.Key;
+            model = DefaultModel;
         }
         var response = await GetGenerateResponse(prompt, model);
 
@@ -80,7 +83,11 @@ public class OllamaService : IAIService, ILoadAsync
 
     public async IAsyncEnumerable<string> GetResponseStream(string prompt, string? model = null)
     {
-        var response = await GetGenerateResponse(prompt, model ?? _config.Key);
+        if (string.IsNullOrEmpty(model) || !ModelNames.Contains(model))
+        {
+            model = DefaultModel;
+        }
+        var response = await GetGenerateResponse(prompt, model ?? DefaultModel);
 
         // Check if the request was successful
         if (!response.IsSuccessStatusCode)
@@ -99,7 +106,7 @@ public class OllamaService : IAIService, ILoadAsync
 
     public async Task<ModelResponse> GetModels()
     {
-        var endpoint = _config.ApiUrl + "/api/tags";
+        var endpoint = ApiUrl + "/api/tags";
         var response = await _client.GetAsync(endpoint);
         var raw = await response.Content.ReadAsStringAsync();
         var models = JsonSerializer.Deserialize<ModelResponse>(raw);

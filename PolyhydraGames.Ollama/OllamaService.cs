@@ -18,17 +18,12 @@ public class OllamaService : IAIService, ILoadAsync
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
     private List<string> ModelNames { get; set; }
-    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config) : this(clientFactory.CreateClient(), config)
-    {
-
-    }
-
-    public OllamaService(HttpClient client, IOllamaConfig config)
-    {
+    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config) 
+    { 
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         DefaultModel = config.Key;
         ApiUrl = config.ApiUrl;
-        _client = client;
+        _client = clientFactory.CreateClient();
     }
     //public OllamaService(HttpClient client, IOllamaConfig config)
     //{

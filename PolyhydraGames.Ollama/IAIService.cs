@@ -4,7 +4,8 @@ namespace PolyhydraGames.Ollama;
 
 public interface IAIService
 {
-    Task<string> GetResponseAsync(string prompt, string? model = null);
-    IAsyncEnumerable<string> GetResponseStream(string prompt, string? model = null);
+    Task<string> GetResponseAsync(string payload);
+    Task<string> GetResponseAsync(Payload payload);
+    IAsyncEnumerable<string> GetResponseStream(Payload payload);
     Task<ModelResponse> GetModels();
 }

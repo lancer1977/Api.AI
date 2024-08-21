@@ -25,7 +25,7 @@ namespace Api.Ollama.WinForms
             this.BeginInvoke(async () =>
             { 
 
-                await foreach (var item in _service.GetResponseStream(textBox1.Text))
+                await foreach (var item in _service.GetResponseStream(new Payload(textBox1.Text)))
                 {
                     Debug.WriteLine(item);
                     textBox2.Text += item;

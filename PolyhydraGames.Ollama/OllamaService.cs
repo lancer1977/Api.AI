@@ -9,6 +9,41 @@ using PolyhydraGames.Ollama.Models;
 
 namespace PolyhydraGames.Ollama;
 
+public class Payload
+{
+    public Payload()
+    {
+
+    }
+    public Payload(string prompt)
+    {
+        Prompt = prompt;
+    }
+    /// <summary>
+    /// a duration string (such as "10m" or "24h")
+    //a number in seconds(such as 3600)
+    //any negative number which will keep the model loaded in memory(e.g. -1 or "-1m")
+    //'0' which will unload the model immediately after generating a response
+    /// </summary>
+    [JsonPropertyName("keep_alive")]
+    public string KeepAlive { get; set; }
+    [JsonPropertyName("model")]
+    public string? Model { get; set; }
+    [JsonPropertyName("prompt")]
+    public string Prompt { get; set; }
+    [JsonPropertyName("stream")]
+    public bool Stream { get; set; }
+    public void SetDurationFromMinutes(int minutes)
+    {
+        KeepAlive = $"{minutes}m";
+    }
+
+    public void SetDurationFromHours(int hours)
+    {
+        KeepAlive = $"{hours}h";
+    }
+}
+
 public class OllamaService : IAIService, ILoadAsync
 {
     //private readonly IOllamaConfig _config;
@@ -18,8 +53,8 @@ public class OllamaService : IAIService, ILoadAsync
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
     private List<string> ModelNames { get; set; }
-    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config) 
-    { 
+    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
+    {
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         DefaultModel = config.Key;
         ApiUrl = config.ApiUrl;
@@ -36,24 +71,23 @@ public class OllamaService : IAIService, ILoadAsync
         Models = modelResponse.Models;
         ModelNames = Models.Select(x => x.Model).ToList();
     }
-    private async Task<HttpResponseMessage> GetGenerateResponse(string prompt, string? model = null)
+    private StringContent GetContent(Payload payload)
     {
-        var payload = new
+        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
         {
-            model = model ?? DefaultModel,
-            prompt,
-            //prompt = $"{_config.Background}\n\nUser: {userInput}\nDJ Spotabot:",
-            stream = false,
-        };
-
+            payload.Model = DefaultModel;
+        }
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-
+        return content;
+    }
+    private async Task<HttpResponseMessage> GetGenerateResponse(Payload payload)
+    {
         try
         {
             var endpoint = ApiUrl + "/api/generate";
             Debug.WriteLine(endpoint);
-            var response = await _client.PostAsync(endpoint, content);
+            var response = await _client.PostAsync(endpoint, GetContent(payload));
             return response;
         }
         catch (HttpRequestException e)
@@ -64,13 +98,14 @@ public class OllamaService : IAIService, ILoadAsync
     }
 
 
-    public async Task<string> GetResponseAsync(string prompt, string? model = null)
+    public Task<string> GetResponseAsync(string payload)
     {
-        if (string.IsNullOrEmpty(model) || !ModelNames.Contains(model))
-        {
-            model = DefaultModel;
-        }
-        var response = await GetGenerateResponse(prompt, model);
+        return GetResponseAsync(new Payload(payload));
+    }
+
+    public async Task<string> GetResponseAsync(Payload payload)
+    { 
+        var response = await GetGenerateResponse(payload);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
@@ -81,13 +116,9 @@ public class OllamaService : IAIService, ILoadAsync
 
     }
 
-    public async IAsyncEnumerable<string> GetResponseStream(string prompt, string? model = null)
-    {
-        if (string.IsNullOrEmpty(model) || !ModelNames.Contains(model))
-        {
-            model = DefaultModel;
-        }
-        var response = await GetGenerateResponse(prompt, model ?? DefaultModel);
+    public async IAsyncEnumerable<string> GetResponseStream(Payload payload)
+    { 
+        var response = await GetGenerateResponse(payload);
 
         // Check if the request was successful
         if (!response.IsSuccessStatusCode)

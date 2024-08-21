@@ -50,7 +50,7 @@ public   class OllamaServiceTests
     public async Task GetOllamaResponse()
     {
         Service = new OllamaService(HttpClientFactory, Config);
-        var response = await Service.GetResponseAsync("Who is the best band ever?");
+        var response = await Service.GetResponseAsync(new Payload(){Prompt = "Who is the best band ever?"});
         Assert.That(response != null);
     }
 
@@ -58,7 +58,7 @@ public   class OllamaServiceTests
     public async Task GetOllamaResponseList()
     {
         Service = new OllamaService(HttpClientFactory, Config);
-        var response = Service.GetResponseStream("What do you think of modern punk like the green day?");
+        var response = Service.GetResponseStream(new Payload("What do you think of modern punk like the green day?"));
         await foreach (var item in response)
         {
             Debug.Write(item);
@@ -71,7 +71,7 @@ public   class OllamaServiceTests
     public async Task GetOllamaResponseList(string user,string song, int popularity)
     {
         Service = new OllamaService(HttpClientFactory, Config);
-        var response = Service.GetResponseStream($"What do you think of {user} and their song {song} which is {popularity} popular?");
+        var response = Service.GetResponseStream(new Payload($"What do you think of {user} and their song {song} which is {popularity} popular?"));
  
         await foreach (var item in response)
         {

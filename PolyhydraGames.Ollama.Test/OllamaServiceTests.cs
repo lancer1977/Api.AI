@@ -1,45 +1,11 @@
 using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
-using Moq; 
+using Moq;
+using PolyhydraGames.Ollama.Models;
 
 namespace PolyhydraGames.Ollama.Test;
 
-public class ChatGPTServiceTests
-{
-    private IConfiguration _configuration;
-    public IOllamaConfig Config { get; set; }
-    public IAIService Service { get; set; }
-    public IHttpClientFactory HttpClientFactory { get; set; }
-    [Test]
-    public async Task GetResponse()
-    {
-        Service = new OllamaService(HttpClientFactory, Config);
-        var response = await Service.GetResponseAsync("What is water made of?");
-        Assert.That(response != null);
-    }
-    public ChatGPTServiceTests()
-    {
-
-        _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path to the test project
-            .AddUserSecrets("65a2f916-1765-44e8-8d59-2d2ddcd7cc9b") // Use the UserSecretsId generated earlier
-            .Build();
-        Config = new OllamaConfig()
-        {
-            ApiUrl = _configuration["Ollama:ApiUrl"],
-            Key = _configuration["Ollama:Key"],
-            Background = _configuration["Ollama:Background"]
-        };
-        var mock = new Mock<IHttpClientFactory>();
-        mock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(new HttpClient());
-
-        HttpClientFactory = mock.Object;
-    }
-
-
-}
 public   class OllamaServiceTests
 {
     private IConfiguration _configuration;
@@ -78,12 +44,12 @@ public   class OllamaServiceTests
             {
                 new ChatMessage()
                 {
-                    Role="user",
-                    Content = $"What do you think of {user} and their song {song} which is {popularity} popular?",
+                    Role="system",
+                    Content = $"Thus far this is what has been said in the chat: \n@MESSAGES\n\nRules to follow in response message section:\n1. Any messages prefixed with dreadbread_bot: are from you the bot. \n2. Don't talk to yourself. \n3. Try to use the names of people who have responded except for #1. Keep responses between 100 to 450 characters max. \n4. Try to respond to any users who have responded to you as well when determining the response. \n5. To direct a message at them add a @ to the front of their name.\n6. Response format MUST be 100% JSON encoded. \nResponse Types:\n0.if you just issued a command with the jukebox bot, tell us about the playing song and why you picked it.\n1.pick a song for the occasion\n2.write a response in the context that is slightly antagonistic.\n3.Write a response in the context that is friendly and contributive.\n4.If there was no messages talk about one of the following scenarios: Your a dungeon master telling us about some wild battle, tell us about a cool video game from the retro era as if you were a commercial announcer, talk about some cool comic you read from back in the day.",
                 },
                 new ChatMessage()
                 {
-                    Role="user",
+                    Role="assistant",
                     Content = $"What do you think of {user} and their song {song} which is {popularity} popular?",
                 },new ChatMessage()
                 {

@@ -9,13 +9,13 @@ using PolyhydraGames.Ollama.Models;
 
 namespace PolyhydraGames.Ollama;
 
-public class Payload
+public class GeneratePayload
 {
-    public Payload()
+    public GeneratePayload()
     {
 
     }
-    public Payload(string prompt)
+    public GeneratePayload(string prompt)
     {
         Prompt = prompt;
     }
@@ -71,7 +71,7 @@ public class OllamaService : IAIService, ILoadAsync
         Models = modelResponse.Models;
         ModelNames = Models.Select(x => x.Model).ToList();
     }
-    private StringContent GetContent(Payload payload)
+    private StringContent GetContent(GeneratePayload payload)
     {
         if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
         {
@@ -81,7 +81,19 @@ public class OllamaService : IAIService, ILoadAsync
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
         return content;
     }
-    private async Task<HttpResponseMessage> GetGenerateResponse(Payload payload)
+
+    private StringContent GetContent(ChatPayload payload)
+    {
+        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
+        {
+            payload.Model = DefaultModel;
+        }
+        var jsonPayload = JsonSerializer.Serialize(payload);
+        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+        return content;
+    }
+
+    private async Task<HttpResponseMessage> GetGenerateResponse(GeneratePayload payload)
     {
         try
         {
@@ -96,14 +108,30 @@ public class OllamaService : IAIService, ILoadAsync
             throw;
         }
     }
-
+    public async Task<HttpResponseMessage> GetChatResponse(ChatPayload payload)
+    {
+        try
+        {
+            var endpoint = ApiUrl + "/api/chat";
+            Debug.WriteLine(endpoint);
+            var content = GetContent(payload);
+            Debug.WriteLine(await content.ReadAsStringAsync());
+            var response = await _client.PostAsync(endpoint,content);
+            return response;
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine($"Request error: {e.Message}");
+            throw;
+        }
+    }
 
     public Task<string> GetResponseAsync(string payload)
     {
-        return GetResponseAsync(new Payload(payload));
+        return GetResponseAsync(new GeneratePayload(payload));
     }
 
-    public async Task<string> GetResponseAsync(Payload payload)
+    public async Task<string> GetResponseAsync(GeneratePayload payload)
     { 
         var response = await GetGenerateResponse(payload);
 
@@ -115,8 +143,18 @@ public class OllamaService : IAIService, ILoadAsync
         return responseList.Response;
 
     }
+    public async Task<string> GetResponseAsync(ChatPayload payload)
+    {
+        var response = await GetChatResponse(payload);
 
-    public async IAsyncEnumerable<string> GetResponseStream(Payload payload)
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync(); 
+        var responseList = JsonSerializer.Deserialize<OllamaChatResponse>(responseBody);
+        return responseList.Message.Content;
+
+    }
+
+    public async IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload)
     { 
         var response = await GetGenerateResponse(payload);
 
@@ -142,6 +180,16 @@ public class OllamaService : IAIService, ILoadAsync
         var raw = await response.Content.ReadAsStringAsync();
         var models = JsonSerializer.Deserialize<ModelResponse>(raw);
         return models ?? throw new NullReferenceException("GetModels returned a null response");
+    }
+
+
+
+    public Task<string> GetResponseAsync(IEnumerable<string> payload)
+    {
+        var chats = payload.Select(x => new ChatMessage() { Role= x.Contains("dreadbread_bot:") 
+            ? "admin":"user", Content = x }).ToList();
+        var chatmodel = new ChatPayload() { Messages = chats };
+        return GetResponseAsync(chatmodel);
     }
 
 

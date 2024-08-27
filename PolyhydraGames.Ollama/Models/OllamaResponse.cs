@@ -2,6 +2,29 @@
 
 namespace PolyhydraGames.Ollama.Models;
 
+public class Message
+{
+    [JsonPropertyName("role")]
+    public string Role { get; set; }
+
+    [JsonPropertyName("content")]
+    public string Content { get; set; }
+}
+
+public class OllamaChatResponse
+{
+    [JsonPropertyName("model")]
+    public string Model { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public DateTime CreatedAt { get; set; }
+
+    [JsonPropertyName("message")]
+    public Message Message { get; set; }
+
+    [JsonPropertyName("done")]
+    public bool Done { get; set; }
+}
 
 public class OllamaResponse
 {

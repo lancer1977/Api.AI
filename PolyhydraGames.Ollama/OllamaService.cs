@@ -11,18 +11,19 @@ namespace PolyhydraGames.Ollama;
 
 public class OllamaService : IAIService, ILoadAsync
 {
+    private readonly IOllamaConfig _config;
+
     //private readonly IOllamaConfig _config;
-    private string ApiUrl { get; }
-    private string DefaultModel { get; }
+    private string ApiUrl => _config.ApiUrl;
+    private string DefaultModel => _config.Key;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
     private List<string> ModelNames { get; set; }
     public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
     {
+        _config = config;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-        DefaultModel = config.Key;
-        ApiUrl = config.ApiUrl;
         _client = clientFactory.CreateClient();
     }
     //public OllamaService(HttpClient client, IOllamaConfig config)

@@ -29,7 +29,7 @@ namespace PolyhydraGames.Ollama.Models
         public int PromptEvalCount { get; set; }
          
         [JsonPropertyName("prompt_eval_duration")]
-        public int PromptEvalDuration { get; set; }
+        public long PromptEvalDuration { get; set; }
          
         [JsonPropertyName("eval_count")]
         public int EvalCount { get; set; }

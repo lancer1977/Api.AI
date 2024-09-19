@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using PolyhydraGames.Ollama.Host;
 using PolyhydraGames.Ollama.Models;
 using PolyhydraGames.Ollama.Ollama;
 
@@ -11,8 +12,17 @@ public   class OllamaServiceTests
 {
     private IConfiguration _configuration;
     public IOllamaConfig Config { get; set; }
+    public IOllamaHostSiteConfig HostConfig { get; set; }
+    public IOllamaHostApi HostApi { get; set; }
     public IAIService Service { get; set; } 
     public IHttpClientFactory HttpClientFactory { get; set; }
+
+    [TestCase("Tell everyone you love them")]
+    public async Task TestAddMessage(string message)
+    {
+        var result = await HostApi.AddMessage($"@dreadbread_bot {message}");
+        Assert.That(result);
+    }
     [Test]
     public async Task GetOllamaResponse()
     {
@@ -90,16 +100,26 @@ public   class OllamaServiceTests
             .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path to the test project
             .AddUserSecrets("65a2f916-1765-44e8-8d59-2d2ddcd7cc9b") // Use the UserSecretsId generated earlier
             .Build();
+
+        HostConfig = new OllamaHostSiteConfig()
+        {
+            Url = _configuration["Host:Url"],
+            WebKey = _configuration["Host:WebKey"]
+        };
         Config = new OllamaConfig()
         {
             ApiUrl = _configuration["Ollama:ApiUrl"],
             Key = _configuration["Ollama:Key"],
             Background = _configuration["Ollama:Background"]
         };
+
+
         var mock = new Mock<IHttpClientFactory>();
         mock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(new HttpClient());
 
         HttpClientFactory = mock.Object;
+
+        HostApi = new OllamaHostApi(HostConfig);
     }
 
 }

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PolyhydraGames.Ollama.Models
-{
-    public class ChatMessage
+namespace PolyhydraGames.Ollama.Models;
+
+public class ChatMessage
     {
         [JsonPropertyName("role")]
         public string Role { get; set; }

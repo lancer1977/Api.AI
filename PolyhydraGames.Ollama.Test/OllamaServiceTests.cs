@@ -3,6 +3,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using PolyhydraGames.Ollama.Models;
+using PolyhydraGames.Ollama.Ollama;
 
 namespace PolyhydraGames.Ollama.Test;
 

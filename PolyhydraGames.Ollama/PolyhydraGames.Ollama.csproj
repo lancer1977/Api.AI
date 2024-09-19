@@ -11,8 +11,4 @@
     <PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Ollama\" />
-  </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 using System.Diagnostics;
-using PolyhydraGames.Ollama; 
+using PolyhydraGames.Ollama;
+using PolyhydraGames.Ollama.Ollama;
 
 namespace Api.Ollama.WinForms
 {

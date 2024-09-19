@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using PolyhydraGames.Core.Interfaces;
 using PolyhydraGames.Ollama.Models;
 
-namespace PolyhydraGames.Ollama;
+namespace PolyhydraGames.Ollama.Ollama;
 
 public class OllamaService : IAIService, ILoadAsync
 {
@@ -82,7 +82,7 @@ public class OllamaService : IAIService, ILoadAsync
             Debug.WriteLine(endpoint);
             var content = GetContent(payload);
             Debug.WriteLine(await content.ReadAsStringAsync());
-            var response = await _client.PostAsync(endpoint,content);
+            var response = await _client.PostAsync(endpoint, content);
             return response;
         }
         catch (HttpRequestException e)
@@ -98,7 +98,7 @@ public class OllamaService : IAIService, ILoadAsync
     }
 
     public async Task<string> GetResponseAsync(GeneratePayload payload)
-    { 
+    {
         var response = await GetGenerateResponse(payload);
 
         response.EnsureSuccessStatusCode();
@@ -114,14 +114,14 @@ public class OllamaService : IAIService, ILoadAsync
         var response = await GetChatResponse(payload);
 
         response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync(); 
+        var responseBody = await response.Content.ReadAsStringAsync();
         var responseList = JsonSerializer.Deserialize<OllamaChatResponse>(responseBody);
         return responseList.Message.Content;
 
     }
 
     public async IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload)
-    { 
+    {
         var response = await GetGenerateResponse(payload);
 
         // Check if the request was successful
@@ -152,8 +152,12 @@ public class OllamaService : IAIService, ILoadAsync
 
     public Task<string> GetResponseAsync(IEnumerable<string> payload)
     {
-        var chats = payload.Select(x => new ChatMessage() { Role= x.Contains("dreadbread_bot:") 
-            ? "admin":"user", Content = x }).ToList();
+        var chats = payload.Select(x => new ChatMessage()
+        {
+            Role = x.Contains("dreadbread_bot:")
+            ? "admin" : "user",
+            Content = x
+        }).ToList();
         var chatmodel = new ChatPayload() { Messages = chats };
         return GetResponseAsync(chatmodel);
     }

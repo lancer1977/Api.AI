@@ -1,7 +1,8 @@
 ﻿using PolyhydraGames.Ollama.Models;
 
-namespace PolyhydraGames.Ollama;
+namespace PolyhydraGames.Ollama.Ollama;
 
+public class
 public interface IAIService
 {
     Task LoadAsync();

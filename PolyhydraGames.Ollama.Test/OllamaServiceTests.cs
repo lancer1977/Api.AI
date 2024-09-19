@@ -20,7 +20,8 @@ public   class OllamaServiceTests
     [TestCase("Tell everyone you love them")]
     public async Task TestAddMessage(string message)
     {
-        var result = await HostApi.AddMessage($"@dreadbread_bot {message}");
+        var msg = new AddMessageParams("DreadBreadcrumb", message);
+        var result = await HostApi.AddMessage(msg);
         Assert.That(result);
     }
     [Test]

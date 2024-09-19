@@ -22,5 +22,13 @@ namespace PolyhydraGames.Ollama.Host
             var ok = response.IsSuccessStatusCode;
             return ok;
         }
+        public async Task<bool> Impersonate(AddMessageParams message)
+        {
+            var endpoint = Config.Url + "/api/ai/impersonate";
+            var content = JsonContent.Create(message);
+            var response = await _client.PostAsync(endpoint, content);
+            var ok = response.IsSuccessStatusCode;
+            return ok;
+        }
     }
 }

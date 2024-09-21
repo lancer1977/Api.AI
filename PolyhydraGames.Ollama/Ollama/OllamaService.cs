@@ -12,19 +12,17 @@ namespace PolyhydraGames.Ollama.Ollama;
 
 public static class AiResponse
 {
-    public static AiResponseType<T>  Create <T>(string rawResponse)
+    public static AiResponseType<T> Create<T>(string rawResponse)
     {
         var result = new AiResponseType<T>(rawResponse, JsonSerializer.Deserialize<T>(rawResponse));
         return result;
     }
-     
+
 
 
 }
 public record AiResponseType<T>(string RawMessage, T? Data)
 {
-    public T? Data { get; init; } 
-    public string RawResponse { get; set; }
     public bool IsSuccess => Data != null;
 }
 public class OllamaService : IAIService, ILoadAsync
@@ -44,7 +42,7 @@ public class OllamaService : IAIService, ILoadAsync
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         _client = clientFactory.CreateClient();
     }
- 
+
     public async Task LoadAsync()
     {
         var modelResponse = await GetModels();
@@ -121,8 +119,8 @@ public class OllamaService : IAIService, ILoadAsync
         var response = await GetGenerateResponse(payload);
 
         response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync(); 
-        
+        var responseBody = await response.Content.ReadAsStringAsync();
+
         return AiResponse.Create<T>(responseBody);
     }
 

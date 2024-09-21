@@ -94,10 +94,10 @@ public class OllamaService : IAIService, ILoadAsync
 
     public Task<string> GetResponseAsync(string prompt)
     {
-        var payload = new ChatPayload()
+        var payload = new GeneratePayload()
         {
-            Pr
-        }
+            Prompt = prompt
+        };
         return GetResponseAsync(payload);
     }
 

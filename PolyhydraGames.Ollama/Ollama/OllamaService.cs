@@ -6,9 +6,27 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using PolyhydraGames.Core.Interfaces;
 using PolyhydraGames.Ollama.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PolyhydraGames.Ollama.Ollama;
 
+public static class AiResponse
+{
+    public static AiResponseType<T>  Create <T>(string rawResponse)
+    {
+        var result = new AiResponseType<T>(rawResponse, JsonSerializer.Deserialize<T>(rawResponse));
+        return result;
+    }
+     
+
+
+}
+public record AiResponseType<T>(string RawMessage, T? Data)
+{
+    public T? Data { get; init; } 
+    public string RawResponse { get; set; }
+    public bool IsSuccess => Data != null;
+}
 public class OllamaService : IAIService, ILoadAsync
 {
     private readonly IOllamaConfig _config;
@@ -26,11 +44,7 @@ public class OllamaService : IAIService, ILoadAsync
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         _client = clientFactory.CreateClient();
     }
-    //public OllamaService(HttpClient client, IOllamaConfig config)
-    //{
-    //    _config = config;
-    //    _client = client;
-    //}
+ 
     public async Task LoadAsync()
     {
         var modelResponse = await GetModels();
@@ -97,8 +111,19 @@ public class OllamaService : IAIService, ILoadAsync
         var payload = new GeneratePayload()
         {
             Prompt = prompt
+
         };
         return GetResponseAsync(payload);
+    }
+
+    public async Task<AiResponseType<T>> GetResponseAsync<T>(GeneratePayload payload)
+    {
+        var response = await GetGenerateResponse(payload);
+
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync(); 
+        
+        return AiResponse.Create<T>(responseBody);
     }
 
     public async Task<string> GetResponseAsync(GeneratePayload payload)
@@ -110,9 +135,9 @@ public class OllamaService : IAIService, ILoadAsync
 
         Console.WriteLine($"Response: {responseBody}");
         var responseList = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        return responseList.Response;
-
+        return responseList?.Response ?? "";
     }
+
     public async Task<string> GetResponseAsync(ChatPayload payload)
     {
         var response = await GetChatResponse(payload);

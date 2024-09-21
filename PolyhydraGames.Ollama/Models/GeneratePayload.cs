@@ -24,7 +24,7 @@ namespace PolyhydraGames.Ollama.Models
         public string? Model { get; set; }
         [JsonPropertyName("prompt")]
         public string Prompt { get; set; }
-        [JsonPropertyName("format   ")]
+        [JsonPropertyName("format")]
         public string Format { get; set; }
 
         [JsonPropertyName("stream")]

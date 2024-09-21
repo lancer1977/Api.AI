@@ -6,7 +6,8 @@ public interface IAIService
 {
     Task LoadAsync();
 
-    Task<AiResponseType<T>> GetResponseAsync<T>(GeneratePayload payload);
+    Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload);
+    //Task<AiResponseType<T>> GetResponseAsync<T>(GeneratePayload payload);
     Task<string> GetResponseAsync(string payload);
     Task<string> GetResponseAsync(GeneratePayload payload);
     IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload);

@@ -18,6 +18,20 @@ public static class AiResponse
         return result;
     }
 
+    public static async Task<AiResponseType<T?>> Create<T>(this HttpResponseMessage response)
+    {
+        response.EnsureSuccessStatusCode();
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var ollamaResponse = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
+        if (ollamaResponse == null)
+        {
+            return new AiResponseType<T?>(string.Empty,default(T?));
+        }
+        else
+        {
+            return Create<T?>(ollamaResponse.Response);
+        }
+    }
 
 
 }
@@ -114,14 +128,12 @@ public class OllamaService : IAIService, ILoadAsync
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType<T>> GetResponseAsync<T>(GeneratePayload payload)
+    public async Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload)
     {
         var response = await GetGenerateResponse(payload);
 
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        return AiResponse.Create<T>(responseBody);
+       
+        return await response.Create<T?>();
     }
 
     public async Task<string> GetResponseAsync(GeneratePayload payload)

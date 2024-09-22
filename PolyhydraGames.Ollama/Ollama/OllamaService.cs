@@ -10,35 +10,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PolyhydraGames.Ollama.Ollama;
 
-public static class AiResponse
-{
-    public static AiResponseType<T> Create<T>(string rawResponse)
-    {
-        var result = new AiResponseType<T>(rawResponse, JsonSerializer.Deserialize<T>(rawResponse));
-        return result;
-    }
-
-    public static async Task<AiResponseType<T?>> Create<T>(this HttpResponseMessage response)
-    {
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var ollamaResponse = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        if (ollamaResponse == null)
-        {
-            return new AiResponseType<T?>(string.Empty,default(T?));
-        }
-        else
-        {
-            return Create<T?>(ollamaResponse.Response);
-        }
-    }
-
-
-}
-public record AiResponseType<T>(string RawMessage, T? Data)
-{
-    public bool IsSuccess => Data != null;
-}
 public class OllamaService : IAIService, ILoadAsync
 {
     private readonly IOllamaConfig _config;

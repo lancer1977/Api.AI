@@ -102,8 +102,6 @@ public class OllamaService : IAIService, ILoadAsync
     public async Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload)
     {
         var response = await GetGenerateResponse(payload);
-
-       
         return await response.Create<T?>();
     }
 

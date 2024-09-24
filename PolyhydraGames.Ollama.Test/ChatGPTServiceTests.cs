@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Moq;
+using PolyhydraGames.Ollama.Ollama;
 
 namespace PolyhydraGames.Ollama.Test
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PolyhydraGames.Ollama
+namespace PolyhydraGames.Ollama.Models
 {
     public class GeneratePayload
     {
@@ -24,6 +24,9 @@ namespace PolyhydraGames.Ollama
         public string? Model { get; set; }
         [JsonPropertyName("prompt")]
         public string Prompt { get; set; }
+        [JsonPropertyName("format")]
+        public string Format { get; set; }
+
         [JsonPropertyName("stream")]
         public bool Stream { get; set; }
         public void SetDurationFromMinutes(int minutes)

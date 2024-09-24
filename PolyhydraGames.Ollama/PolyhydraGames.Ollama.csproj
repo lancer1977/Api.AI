@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
+    <Compile Remove="Ollama\**" />
+    <EmbeddedResource Remove="Ollama\**" />
+    <None Remove="Ollama\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ollama\" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
   </ItemGroup>
 
 </Project>

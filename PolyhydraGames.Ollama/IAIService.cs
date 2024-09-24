@@ -7,10 +7,9 @@ public interface IAIService
     Task LoadAsync();
     Task<string> GetResponseAsync(string payload);
     Task<string> GetResponseAsync(GeneratePayload payload);
+    Task<string> GetResponseAsync(ChatPayload payload);
     IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload);
     Task<ModelResponse> GetModels();
-    Task<string> GetResponseAsync(ChatPayload payload);
-    Task<string> GetResponseAsync(IEnumerable<string> payload);
 }
 
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);

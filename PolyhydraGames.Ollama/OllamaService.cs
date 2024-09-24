@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 using PolyhydraGames.Core.Interfaces;
 using PolyhydraGames.Ollama.Models;
 
@@ -11,17 +12,17 @@ namespace PolyhydraGames.Ollama;
 
 public class OllamaService : IAIService, ILoadAsync
 {
+    private readonly ILogger<OllamaService> _log;
     private readonly IOllamaConfig _config;
-
-    //private readonly IOllamaConfig _config;
+     
     private string ApiUrl => _config.ApiUrl;
     private string DefaultModel => _config.Key;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
     private List<string> ModelNames { get; set; }
-    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
-    {
+    public OllamaService( IHttpClientFactory clientFactory, IOllamaConfig config)
+    { 
         _config = config;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         _client = clientFactory.CreateClient();
@@ -63,8 +64,7 @@ public class OllamaService : IAIService, ILoadAsync
     {
         try
         {
-            var endpoint = ApiUrl + "/api/generate";
-            Debug.WriteLine(endpoint);
+            var endpoint = ApiUrl + "/api/generate"; 
             var response = await _client.PostAsync(endpoint, GetContent(payload));
             return response;
         }
@@ -100,11 +100,8 @@ public class OllamaService : IAIService, ILoadAsync
     public async Task<string> GetResponseAsync(GeneratePayload payload)
     { 
         var response = await GetGenerateResponse(payload);
-
         response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        Console.WriteLine($"Response: {responseBody}");
+        var responseBody = await response.Content.ReadAsStringAsync(); 
         var responseList = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
         return responseList.Response;
 
@@ -148,18 +145,11 @@ public class OllamaService : IAIService, ILoadAsync
         return models ?? throw new NullReferenceException("GetModels returned a null response");
     }
 
+ 
 
 
-    public Task<string> GetResponseAsync(IEnumerable<string> payload)
-    {
-        var chats = payload.Select(x => new ChatMessage() { Role= x.Contains("dreadbread_bot:") 
-            ? "admin":"user", Content = x }).ToList();
-        var chatmodel = new ChatPayload() { Messages = chats };
-        return GetResponseAsync(chatmodel);
-    }
 
-
-    public async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
+    private async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
     {
         using var client = new HttpClient();
         // Create the content to send in the POST request

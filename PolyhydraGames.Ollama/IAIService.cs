@@ -1,11 +1,11 @@
 ﻿using PolyhydraGames.Ollama.Models;
 
-namespace PolyhydraGames.Ollama.Ollama;
+namespace PolyhydraGames.Ollama;
 
 public interface IAIService
 {
     Task LoadAsync();
-
+    Task<bool> CheckHealth();
     Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload);
     //Task<AiResponseType<T>> GetResponseAsync<T>(GeneratePayload payload);
     Task<string> GetResponseAsync(string payload);

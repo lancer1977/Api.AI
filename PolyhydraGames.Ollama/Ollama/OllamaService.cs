@@ -155,6 +155,13 @@ public class OllamaService : IAIService, ILoadAsync
         var models = JsonSerializer.Deserialize<ModelResponse>(raw);
         return models ?? throw new NullReferenceException("GetModels returned a null response");
     }
+    public async Task<bool> CheckHealth()
+    {
+        var endpoint = ApiUrl + "";
+        var response = await _client.GetAsync(endpoint);
+        return response.IsSuccessStatusCode;
+    }
+
 
 
 

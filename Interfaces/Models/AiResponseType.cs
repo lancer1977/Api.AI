@@ -6,8 +6,11 @@
 /// <typeparam name="T"></typeparam>
 /// <param name="RawMessage"></param>
 /// <param name="Data"></param>
-public record AiResponseType<T>(string RawMessage, T? Data)
+public record AiResponseType<T>(string Message, T? Data) : AiResponseType(Message)
 {
-    public bool IsSuccess => Data != null;
+    public override bool IsSuccess => Data != null;
 }
- 
+public record AiResponseType(string? Message)
+{
+    public virtual bool IsSuccess => string.IsNullOrEmpty(Message);
+}

@@ -1,0 +1,1 @@
+Allows apps to communicate with AI Server

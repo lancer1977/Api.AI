@@ -4,6 +4,25 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Assembly>PolyhydraGames.Ollama</Assembly> 
+
+    <!-- Package metadata -->
+    <PackageId>PolyhydraGames.Ollama</PackageId> 
+    <Title>Ollama LLM Rest calls</Title>
+    <Description>Rest calls for Ollama.</Description>
+    <Authors>
+        <Author>
+            <Name>Christopher Richmond</Name>
+            <Email>lancer1977@gmail.com</Email>
+        </Author>
+    </Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRepositoryType>nuget.org</PackageRepositoryType>
+
+    <!-- Copyright and trademark information -->
+    <Copyright>(c) 2024 Polyhydra Games. All rights reserved.</Copyright>
+    <Trademark>Trademark of Polyhydra Games.</Trademark>
+
   </PropertyGroup>
 
   <ItemGroup>

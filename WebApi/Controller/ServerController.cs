@@ -14,14 +14,14 @@ public class ServerController : ControllerBase
         }
 
     [HttpGet("[action]")]
-    public Task<IEnumerable<Server>> Items()
+    public Task<IEnumerable<ServerType>> Items()
     {
             return _source.Items();
         }
      
     // add a new server
     [HttpPost("[action]")]
-    public Task AddOrUpdateServer(Server server)
+    public Task AddOrUpdateServer(ServerType server)
     {
             return _source.AddOrUpdateServer(server);
         }

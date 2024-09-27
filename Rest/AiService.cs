@@ -29,7 +29,7 @@ public class AiService : IAIService, ILoadAsync
     public async Task LoadAsync()
     {
         var modelResponse = await GetPersonalities();
-        Personalities = modelResponse;
+        Personalities = modelResponse.Cast<PersonalityType>().ToList();
         PersonalityNames = Personalities.Select(x => x.Name).ToList();
     }
     private StringContent GetContent(AiRequestType payload)
@@ -72,7 +72,7 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
-    public Task<AiRequestType> GetResponseAsync(string prompt)
+    public Task<AiResponseType> GetResponseAsync(string prompt)
     {
         var payload = new AiRequestType(prompt);
         return GetResponseAsync(payload);
@@ -84,13 +84,13 @@ public class AiService : IAIService, ILoadAsync
         return await response.Create<T?>();
     }
  
-    public async Task<AiResponseType<string>> GetResponseAsync(AiRequestType payload)
+    public async Task<AiResponseType> GetResponseAsync(AiRequestType payload)
     {
         var response = await GetChatResponse(payload);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        var responseList = JsonSerializer.Deserialize<AiResponseType<string>>(responseBody);
+        var responseList = JsonSerializer.Deserialize<AiResponseType>(responseBody);
         return responseList;
 
     }
@@ -109,7 +109,7 @@ public class AiService : IAIService, ILoadAsync
         using var reader = new StreamReader(stream);
         while (await reader.ReadLineAsync() is { } line)
         {
-            var local = JsonSerializer.Deserialize<AiResponseType<string>>(line, _options);
+            var local = JsonSerializer.Deserialize<AiResponseType>(line, _options);
             yield return local.Message;
         }
     }
@@ -120,7 +120,7 @@ public class AiService : IAIService, ILoadAsync
         var response = await _client.GetAsync(endpoint);
         var raw = await response.Content.ReadAsStringAsync();
         var model = JsonSerializer.Deserialize<List<PersonalityType>>(raw);
-        return model ?? throw new NullReferenceException("GetModels returned a null response");
+        return model?.Cast<IPersonality>().ToList() ?? throw new NullReferenceException("GetModels returned a null response");
     }
     public async Task<bool> CheckHealth()
     {

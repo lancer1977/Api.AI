@@ -13,8 +13,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 }
 
     );
-builder.Services.AddSwaggerGen();
-builder.Services.RegisterUserServices(builder.Configuration);
+builder.Services.AddSwaggerGen(); 
 builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
 //builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));
 builder.Services.AddAuthorization(options =>

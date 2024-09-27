@@ -1,4 +1,6 @@
-﻿namespace PolyhydraGames.AI.WebApi.Controller
+﻿using PolyhydraGames.AI.Models;
+
+namespace PolyhydraGames.AI.WebApi.Controller
 {
     public interface IServerSource
     {

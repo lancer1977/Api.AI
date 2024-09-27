@@ -72,7 +72,7 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
-    public Task<string> GetResponseAsync(string prompt)
+    public Task<AiRequestType> GetResponseAsync(string prompt)
     {
         var payload = new AiRequestType(prompt);
         return GetResponseAsync(payload);
@@ -114,7 +114,7 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
-    public async Task<List<PersonalityType>> GetPersonalities()
+    public async Task<List<IPersonality>> GetPersonalities()
     {
         var endpoint = ApiUrl + "/api/tags";
         var response = await _client.GetAsync(endpoint);

@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
-using PolyhydraGames.Core.Interfaces; 
+using PolyhydraGames.Core.Interfaces;
 
-namespace PolyhydraGames.Ollama.WebApi;
+namespace PolyhydraGames.AI.WebApi;
 
 public static class Extensions
 {

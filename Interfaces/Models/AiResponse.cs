@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace PolyhydraGames.Ollama.Models;
+namespace PolyhydraGames.AI.Models;
 
 public interface IServer
 {
@@ -13,7 +13,7 @@ public interface IServer
     string Address { get; set; }
 }
 
-public static class AiResponse
+public   static partial class AiResponse
 {
     public static AiResponseType<T> Create<T>(string rawResponse)
     {

@@ -1,8 +1,8 @@
 using Microsoft.IdentityModel.Tokens;
+using PolyhydraGames.AI.WebApi;
 using PolyhydraGames.Core.AspNet.IdentityServices;
 using PolyhydraGames.Core.AspNet.Middleware.Owner;
 using PolyhydraGames.Core.Interfaces;
-using PolyhydraGames.Ollama.WebApi;
 using PolyhydraGames.Streaming.SQL.Databases;
 
 var builder = WebApplication.CreateBuilder(args);

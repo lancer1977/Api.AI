@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PolyhydraGames.Ollama.Models;
+namespace Ollama.Models;
 
 public class Details
 {

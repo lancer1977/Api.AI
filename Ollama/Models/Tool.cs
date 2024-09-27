@@ -1,6 +1,4 @@
-﻿using PolyhydraGames.Ollama.Models;
-
-namespace PolyhydraGames.Ollama;
+﻿namespace Ollama.Models;
 
 public class Tool
 {

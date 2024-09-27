@@ -1,4 +1,4 @@
-namespace PolyhydraGames.Ollama.WebApi
+namespace PolyhydraGames.AI.WebApi
 {
     public class Server: IServer
     {

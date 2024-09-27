@@ -1,6 +1,4 @@
-﻿using PolyhydraGames.Ollama.Models;
-
-namespace PolyhydraGames.Ollama;
+﻿namespace PolyhydraGames.AI.Rest;
 
 public interface IOllamaService
 {
@@ -14,5 +12,3 @@ public interface IOllamaService
     IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload);
     Task<ModelResponse> GetModels();
 }
-
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);

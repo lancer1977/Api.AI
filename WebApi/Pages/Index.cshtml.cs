@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace PolyhydraGames.Ollama.WebApi.Pages;
+namespace PolyhydraGames.AI.WebApi.Pages;
 
 public class IndexModel : PageModel
 {

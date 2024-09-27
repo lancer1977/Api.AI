@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PolyhydraGames.Streaming.Interfaces;
 
-namespace PolyhydraGames.Ollama.WebApi.Controller
+namespace PolyhydraGames.AI.WebApi.Controller
 {
     public class ServerController : ControllerBase
     {

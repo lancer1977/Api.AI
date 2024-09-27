@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
-using PolyhydraGames.Ollama.Models;
+using Ollama.Models;
 
-namespace PolyhydraGames.Ollama.Host;
+namespace Ollama.Host;
 
 public class OllamaHostApi :IOllamaHostApi
 {

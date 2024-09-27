@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace PolyhydraGames.Ollama.WebApi.Controller;
+namespace PolyhydraGames.AI.WebApi.Controller;
 
 [Route("[controller]")]
 [ApiController]

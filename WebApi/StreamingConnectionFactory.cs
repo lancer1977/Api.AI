@@ -1,2 +1,2 @@
-﻿namespace PolyhydraGames.Ollama.WebApi;
+﻿namespace PolyhydraGames.AI.WebApi;
 

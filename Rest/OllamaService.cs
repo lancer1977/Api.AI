@@ -1,11 +1,10 @@
-﻿using System.Diagnostics; 
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PolyhydraGames.Core.Interfaces;
-using PolyhydraGames.Ollama.Models;
 
-namespace PolyhydraGames.Ollama.Ollama;
+namespace PolyhydraGames.AI.Rest;
 
 public class OllamaService : IOllamaService, ILoadAsync
 {

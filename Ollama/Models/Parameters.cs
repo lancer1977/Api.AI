@@ -1,4 +1,4 @@
-﻿namespace PolyhydraGames.Ollama.Models;
+﻿namespace Ollama.Models;
 
 public class Parameters
 {

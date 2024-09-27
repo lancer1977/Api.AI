@@ -1,4 +1,4 @@
-﻿namespace PolyhydraGames.Ollama.Ollama;
+﻿namespace PolyhydraGames.AI.Rest;
 
 public class OllamaConfig : IOllamaConfig
 {

@@ -1,4 +1,4 @@
-﻿namespace PolyhydraGames.Ollama.Host;
+﻿namespace Ollama.Host;
 
 public class OllamaHostSiteConfig : IOllamaHostSiteConfig
 {

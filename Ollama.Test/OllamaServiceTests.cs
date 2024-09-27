@@ -2,9 +2,11 @@ using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using PolyhydraGames.Ollama.Host;
-using PolyhydraGames.Ollama.Models;
-using PolyhydraGames.Ollama.Ollama;
+using Ollama;
+using Ollama.Host;
+using Ollama.Models;
+using Ollama.Ollama;
+using PolyhydraGames.AI.Interfaces; 
 
 namespace PolyhydraGames.Ollama.Test;
 
@@ -14,7 +16,7 @@ public   class OllamaServiceTests
     public IOllamaConfig Config { get; set; }
     public IOllamaHostSiteConfig HostConfig { get; set; }
     public IOllamaHostApi HostApi { get; set; }
-    public IAIService Service { get; set; } 
+    public OllamaService Service { get; set; } 
     public IHttpClientFactory HttpClientFactory { get; set; }
 
     [TestCase("Tell everyone you love them")]

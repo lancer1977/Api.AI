@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PolyhydraGames.AI.Interfaces;
 
 namespace PolyhydraGames.AI.WebApi.Controller;
 
@@ -14,13 +15,10 @@ public class AiController : ControllerBase
     }
      
     [HttpGet("[action]")]
-    public Task<IEnumerable<IViewer>> Items()
+    public Task<IEnumerable<IServer>> Items()
     {
         return _viewerService.Items();
     }
 
-    public Task UpdateTwitch()
-    {
-        throw new NotImplementedException();
-    }
+ 
 }

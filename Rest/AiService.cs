@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
 
@@ -16,9 +17,9 @@ public class AiService : IAIService, ILoadAsync
     private string DefaultModel => _config.Key;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
-    private List<Personality> Personalities { get; set; }
-    private List<string> ModelNames { get; set; }
-    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
+    private List<PersonalityType> Personalities { get; set; }
+    private List<string> PersonalityNames { get; set; }
+    public AiService(IHttpClientFactory clientFactory, IOllamaConfig config)
     {
         _config = config;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
@@ -27,33 +28,18 @@ public class AiService : IAIService, ILoadAsync
 
     public async Task LoadAsync()
     {
-        var modelResponse = await GetModels();
-        Models = modelResponse.Models;
-        ModelNames = Models.Select(x => x.Model).ToList();
+        var modelResponse = await GetPersonalities();
+        Personalities = modelResponse;
+        PersonalityNames = Personalities.Select(x => x.Name).ToList();
     }
-    private StringContent GetContent(AiRequest payload)
-    {
-        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
-        {
-            payload.Model = DefaultModel;
-        }
+    private StringContent GetContent(AiRequestType payload)
+    { 
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
         return content;
     }
-
-    private StringContent GetContent(AiRequest payload)
-    {
-        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
-        {
-            payload.Model = DefaultModel;
-        }
-        var jsonPayload = JsonSerializer.Serialize(payload);
-        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-        return content;
-    }
-
-    private async Task<HttpResponseMessage> GetGenerateResponse(AiRequest payload)
+ 
+    private async Task<HttpResponseMessage> GetGenerateResponse(AiRequestType payload)
     {
         try
         {
@@ -68,7 +54,7 @@ public class AiService : IAIService, ILoadAsync
             throw;
         }
     }
-    public async Task<HttpResponseMessage> GetChatResponse(AiRequest payload)
+    public async Task<HttpResponseMessage> GetChatResponse(AiRequestType payload)
     {
         try
         {
@@ -88,33 +74,17 @@ public class AiService : IAIService, ILoadAsync
 
     public Task<string> GetResponseAsync(string prompt)
     {
-        var payload = new AiRequest()
-        {
-            Prompt = prompt
-
-        };
+        var payload = new AiRequestType(prompt);
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequest payload)
+    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType payload)
     {
         var response = await GetGenerateResponse(payload);
         return await response.Create<T?>();
     }
-
-    public async Task<string> GetResponseAsync(AiRequest payload)
-    {
-        var response = await GetGenerateResponse(payload);
-
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-
-        Console.WriteLine($"Response: {responseBody}");
-        var responseList = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        return responseList?.Response ?? "";
-    }
-
-    public async Task<string> GetResponseAsync(AiRequest payload)
+ 
+    public async Task<string> GetResponseAsync(AiRequestType payload)
     {
         var response = await GetChatResponse(payload);
 
@@ -125,7 +95,7 @@ public class AiService : IAIService, ILoadAsync
 
     }
 
-    public async IAsyncEnumerable<string> GetResponseStream(AiRequest payload)
+    public async IAsyncEnumerable<string> GetResponseStream(AiRequestType payload)
     {
         var response = await GetGenerateResponse(payload);
 
@@ -139,18 +109,18 @@ public class AiService : IAIService, ILoadAsync
         using var reader = new StreamReader(stream);
         while (await reader.ReadLineAsync() is { } line)
         {
-            var local = JsonSerializer.Deserialize<OllamaResponse>(line, _options);
-            yield return local.Response;
+            var local = JsonSerializer.Deserialize<AiResponseType<string>>(line, _options);
+            yield return local.RawMessage;
         }
     }
 
-    public async Task<Personality> GetModels()
+    public async Task<List<PersonalityType>> GetPersonalities()
     {
         var endpoint = ApiUrl + "/api/tags";
         var response = await _client.GetAsync(endpoint);
         var raw = await response.Content.ReadAsStringAsync();
-        var models = JsonSerializer.Deserialize<ModelResponse>(raw);
-        return models ?? throw new NullReferenceException("GetModels returned a null response");
+        var model = JsonSerializer.Deserialize<List<PersonalityType>>(raw);
+        return model ?? throw new NullReferenceException("GetModels returned a null response");
     }
     public async Task<bool> CheckHealth()
     {
@@ -160,20 +130,7 @@ public class AiService : IAIService, ILoadAsync
     }
 
 
-
-
-    public Task<string> GetResponseAsync(IEnumerable<string> payload)
-    {
-        var chats = payload.Select(x => new ChatMessage()
-        {
-            Role = x.Contains("dreadbread_bot:")
-            ? "admin" : "user",
-            Content = x
-        }).ToList();
-        var chatmodel = new AiRequest() { Messages = chats };
-        return GetResponseAsync(chatmodel);
-    }
-
+ 
 
     public async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
     {

@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Configuration;
 using Moq;
-using PolyhydraGames.Ollama.Ollama;
+using Ollama;
+using Ollama.Ollama;
+using PolyhydraGames.AI.Interfaces;
 
 namespace PolyhydraGames.Ollama.Test;
 
@@ -8,7 +10,7 @@ public class ChatGPTServiceTests
 {
     private IConfiguration _configuration;
     public IOllamaConfig Config { get; set; }
-    public IAIService Service { get; set; }
+    public OllamaService Service { get; set; }
     public IHttpClientFactory HttpClientFactory { get; set; }
     [Test]
     public async Task GetResponse()

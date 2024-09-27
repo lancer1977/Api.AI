@@ -84,14 +84,14 @@ public class AiService : IAIService, ILoadAsync
         return await response.Create<T?>();
     }
  
-    public async Task<string> GetResponseAsync(AiRequestType payload)
+    public async Task<AiResponseType<string>> GetResponseAsync(AiRequestType payload)
     {
         var response = await GetChatResponse(payload);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
-        var responseList = JsonSerializer.Deserialize<OllamaChatResponse>(responseBody);
-        return responseList.Message.Content;
+        var responseList = JsonSerializer.Deserialize<AiResponseType<string>>(responseBody);
+        return responseList;
 
     }
 

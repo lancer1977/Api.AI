@@ -10,8 +10,8 @@ namespace PolyhydraGames.AI.Interfaces
         Task LoadAsync();
         Task<bool> CheckHealth(); 
         Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType payload);
-        Task<string> GetResponseAsync(string payload);
-        Task<string> GetResponseAsync(AiRequestType payload);
+        Task<AiResponseType<string>> GetResponseAsync(string payload);
+        Task<AiResponseType<string>> GetResponseAsync(AiRequestType payload);
         IAsyncEnumerable<string> GetResponseStream(AiRequestType payload);
         Task<IPersonality> GetPersonalities();
     }

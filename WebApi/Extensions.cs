@@ -19,11 +19,4 @@ public static class Extensions
             };
         return conStrBuilder.ConnectionString;
     }
-
-    public static void RegisterUserServices(this IServiceCollection services, ConfigurationManager configuration)
-    {
-        var masterConn = configuration.GetConnString("Streaming", "SqlPassword");
-        services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(masterConn)); 
-    }
-
-}I 
+}

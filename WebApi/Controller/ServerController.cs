@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PolyhydraGames.AI.Interfaces;
+using PolyhydraGames.AI.Models;
 
 namespace PolyhydraGames.AI.WebApi.Controller;
 
@@ -12,7 +14,7 @@ public class ServerController : ControllerBase
         }
 
     [HttpGet("[action]")]
-    public Task<IEnumerable<IViewer>> Items()
+    public Task<IEnumerable<Server>> Items()
     {
             return _source.Items();
         }

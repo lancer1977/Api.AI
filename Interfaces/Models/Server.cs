@@ -2,7 +2,7 @@
 
 namespace PolyhydraGames.AI.Models
 {
-    public class Server : IServer
+    public class ServerType : IServer
     {
         public string Name { get; set; }
         public string Description { get; set; }

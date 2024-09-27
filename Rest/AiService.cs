@@ -110,7 +110,7 @@ public class AiService : IAIService, ILoadAsync
         while (await reader.ReadLineAsync() is { } line)
         {
             var local = JsonSerializer.Deserialize<AiResponseType<string>>(line, _options);
-            yield return local.RawMessage;
+            yield return local.Message;
         }
     }
 

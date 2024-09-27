@@ -1,2 +1,0 @@
-﻿namespace PolyhydraGames.AI.WebApi;
-

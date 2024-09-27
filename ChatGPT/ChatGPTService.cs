@@ -1,17 +1,17 @@
 ﻿using System.Text;
 using System.Text.Json;
 
-namespace Api.ChatGPT
+namespace Api.ChatGPT;
+
+public class ChatGPTService
 {
-    public class ChatGPTService
+    private readonly IChatGPTConfig _config;
+    public ChatGPTService(IChatGPTConfig config)
     {
-        private readonly IChatGPTConfig _config;
-        public ChatGPTService(IChatGPTConfig config)
-        {
             _config = config;
         }
-        private   async Task<string> GetResponseFromOpenAI(string personaPrompt, string userInput)
-        {
+    private   async Task<string> GetResponseFromOpenAI(string personaPrompt, string userInput)
+    {
             using (HttpClient client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_config.ApiKey}");
@@ -37,5 +37,4 @@ namespace Api.ChatGPT
                 return parsedResponse.choices[0].text.Trim();
             }
         }
-    }
 }

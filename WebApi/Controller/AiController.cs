@@ -24,15 +24,3 @@ public class AiController : ControllerBase
         throw new NotImplementedException();
     }
 }
-
-public interface IServer
-{
-
-}
-
-
-public interface IServerSource
-{
-    Task AddOrUpdateServer(Server server);
-    Task<IEnumerable<IServer>> Items();
-}

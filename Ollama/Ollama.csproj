@@ -1,33 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <Assembly>PolyhydraGames.Ollama</Assembly> 
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Assembly>PolyhydraGames.Ollama</Assembly>
+		<Namespace>PolyhydraGames.Ollama</Namespace>
+		<!-- Package metadata -->
+		<PackageId>PolyhydraGames.Ollama</PackageId>
+		<Title>Ollama LLM Rest calls</Title>
+		<Description>Rest calls for Ollama.</Description>
+		<Authors>
+			<Author>
+				<Name>Christopher Richmond</Name>
+				<Email>lancer1977@gmail.com</Email>
+			</Author>
+		</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRepositoryType>nuget.org</PackageRepositoryType>
 
-    <!-- Package metadata -->
-    <PackageId>PolyhydraGames.Ollama</PackageId> 
-    <Title>Ollama LLM Rest calls</Title>
-    <Description>Rest calls for Ollama.</Description>
-    <Authors>
-        <Author>
-            <Name>Christopher Richmond</Name>
-            <Email>lancer1977@gmail.com</Email>
-        </Author>
-    </Authors>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRepositoryType>nuget.org</PackageRepositoryType>
+		<!-- Copyright and trademark information -->
+		<Copyright>(c) 2024 Polyhydra Games. All rights reserved.</Copyright>
+		<Trademark>Trademark of Polyhydra Games.</Trademark>
 
-    <!-- Copyright and trademark information -->
-    <Copyright>(c) 2024 Polyhydra Games. All rights reserved.</Copyright>
-    <Trademark>Trademark of Polyhydra Games.</Trademark>
+	</PropertyGroup>
 
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+		<PackageReference Include="PolyhydraGames.AI" Version="1.0.0.3" />
+		<PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
+	</ItemGroup>
 
 </Project>

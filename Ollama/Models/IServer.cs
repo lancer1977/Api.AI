@@ -1,4 +1,4 @@
-﻿namespace PolyhydraGames.AI.Models
+﻿namespace Ollama.Models
 {
     public interface IServer
     {

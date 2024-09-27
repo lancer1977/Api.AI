@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ollama.Models;
+using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
 
 namespace Ollama.Ollama;

@@ -2,23 +2,23 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using PolyhydraGames.Ollama.Ollama;
 
-namespace PolyhydraGames.Ollama.Test
+namespace PolyhydraGames.Ollama.Test;
+
+public class ChatGPTServiceTests
 {
-    public class ChatGPTServiceTests
+    private IConfiguration _configuration;
+    public IOllamaConfig Config { get; set; }
+    public IAIService Service { get; set; }
+    public IHttpClientFactory HttpClientFactory { get; set; }
+    [Test]
+    public async Task GetResponse()
     {
-        private IConfiguration _configuration;
-        public IOllamaConfig Config { get; set; }
-        public IAIService Service { get; set; }
-        public IHttpClientFactory HttpClientFactory { get; set; }
-        [Test]
-        public async Task GetResponse()
-        {
             Service = new OllamaService(HttpClientFactory, Config);
             var response = await Service.GetResponseAsync("What is water made of?");
             Assert.That(response != null);
         }
-        public ChatGPTServiceTests()
-        {
+    public ChatGPTServiceTests()
+    {
 
             _configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -38,5 +38,4 @@ namespace PolyhydraGames.Ollama.Test
         }
 
 
-    }
 }

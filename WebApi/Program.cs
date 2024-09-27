@@ -3,7 +3,6 @@ using PolyhydraGames.AI.WebApi;
 using PolyhydraGames.Core.AspNet.IdentityServices;
 using PolyhydraGames.Core.AspNet.Middleware.Owner;
 using PolyhydraGames.Core.Interfaces;
-using PolyhydraGames.Streaming.SQL.Databases;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -17,7 +16,7 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 builder.Services.AddSwaggerGen();
 builder.Services.RegisterUserServices(builder.Configuration);
 builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
-builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));
+//builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>

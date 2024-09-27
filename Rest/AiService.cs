@@ -2,11 +2,12 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
 
 namespace PolyhydraGames.AI.Rest;
 
-public class OllamaService : IOllamaService, ILoadAsync
+public class AiService : IAIService, ILoadAsync
 {
     private readonly IOllamaConfig _config;
 
@@ -15,7 +16,7 @@ public class OllamaService : IOllamaService, ILoadAsync
     private string DefaultModel => _config.Key;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
-    private List<ModelDetail> Models { get; set; }
+    private List<Personality> Personalities { get; set; }
     private List<string> ModelNames { get; set; }
     public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
     {
@@ -30,7 +31,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         Models = modelResponse.Models;
         ModelNames = Models.Select(x => x.Model).ToList();
     }
-    private StringContent GetContent(GeneratePayload payload)
+    private StringContent GetContent(AiRequest payload)
     {
         if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
         {
@@ -41,7 +42,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         return content;
     }
 
-    private StringContent GetContent(ChatPayload payload)
+    private StringContent GetContent(AiRequest payload)
     {
         if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
         {
@@ -52,7 +53,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         return content;
     }
 
-    private async Task<HttpResponseMessage> GetGenerateResponse(GeneratePayload payload)
+    private async Task<HttpResponseMessage> GetGenerateResponse(AiRequest payload)
     {
         try
         {
@@ -67,7 +68,7 @@ public class OllamaService : IOllamaService, ILoadAsync
             throw;
         }
     }
-    public async Task<HttpResponseMessage> GetChatResponse(ChatPayload payload)
+    public async Task<HttpResponseMessage> GetChatResponse(AiRequest payload)
     {
         try
         {
@@ -87,7 +88,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
     public Task<string> GetResponseAsync(string prompt)
     {
-        var payload = new GeneratePayload()
+        var payload = new AiRequest()
         {
             Prompt = prompt
 
@@ -95,13 +96,13 @@ public class OllamaService : IOllamaService, ILoadAsync
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload)
+    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequest payload)
     {
         var response = await GetGenerateResponse(payload);
         return await response.Create<T?>();
     }
 
-    public async Task<string> GetResponseAsync(GeneratePayload payload)
+    public async Task<string> GetResponseAsync(AiRequest payload)
     {
         var response = await GetGenerateResponse(payload);
 
@@ -113,7 +114,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         return responseList?.Response ?? "";
     }
 
-    public async Task<string> GetResponseAsync(ChatPayload payload)
+    public async Task<string> GetResponseAsync(AiRequest payload)
     {
         var response = await GetChatResponse(payload);
 
@@ -124,7 +125,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
     }
 
-    public async IAsyncEnumerable<string> GetResponseStream(GeneratePayload payload)
+    public async IAsyncEnumerable<string> GetResponseStream(AiRequest payload)
     {
         var response = await GetGenerateResponse(payload);
 
@@ -143,7 +144,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         }
     }
 
-    public async Task<ModelResponse> GetModels()
+    public async Task<Personality> GetModels()
     {
         var endpoint = ApiUrl + "/api/tags";
         var response = await _client.GetAsync(endpoint);
@@ -169,7 +170,7 @@ public class OllamaService : IOllamaService, ILoadAsync
             ? "admin" : "user",
             Content = x
         }).ToList();
-        var chatmodel = new ChatPayload() { Messages = chats };
+        var chatmodel = new AiRequest() { Messages = chats };
         return GetResponseAsync(chatmodel);
     }
 

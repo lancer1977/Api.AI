@@ -17,10 +17,11 @@ namespace Ollama.Ollama;
 
         public Task<bool> CheckHealth()=> Service.CheckHealth();
 
-        public   Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
+        public  async Task<AiResponseType> GetResponseAsync(AiRequestType request)
         {
-            var payload = request.ToGeneratePayload<T>();
-            return Service.GetResponseAsync<T>(payload); 
+            var payload = request.ToGeneratePayload();
+            var response = await Service.GetResponseAsync(payload);
+            return new AiResponseType(response);
         }
 
         public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)

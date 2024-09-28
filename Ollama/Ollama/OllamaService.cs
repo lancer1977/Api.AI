@@ -95,10 +95,10 @@ public class OllamaService : IOllamaService, ILoadAsync
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType<T?>> GetResponseAsync<T>(GeneratePayload payload)
+    public async Task<AiResponseType> GetResponseAsync<T>(GeneratePayload payload)
     {
         var response = await GetGenerateResponse(payload);
-        return await response.Create<T?>();
+        var response  return await response.Create<T?>();
     }
 
     public async Task<string> GetResponseAsync(GeneratePayload payload)

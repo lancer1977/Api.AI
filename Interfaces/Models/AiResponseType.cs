@@ -14,3 +14,17 @@ public record AiResponseType(string? Message)
 {
     public bool IsSuccess => string.IsNullOrEmpty(Message);
 }
+
+public static class AIResponse
+{
+    public static async Task<AiResponseType> CreateAsync(this HttpResponseMessage message)
+    {
+        if (!message.IsSuccessStatusCode) return new AiResponseType(null);
+        var text = await  message.Content.ReadAsStringAsync();
+        return new AiResponseType(text);
+    }
+    public static async Task<AiResponseType> Create(this string message)
+    {
+        return new AiResponseType(message);
+    }
+}

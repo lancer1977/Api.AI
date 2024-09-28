@@ -6,9 +6,11 @@ public interface IAIService
 {
     Task LoadAsync();
     Task<bool> CheckHealth();
-    Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request); 
+    Task<AiResponseType> GetResponseAsync<T>(AiRequestType request); 
     IAsyncEnumerable<string> GetResponseStream(AiRequestType request);
     Task<IEnumerable<PersonalityType>> GetModels();
-
+    /// <summary>
+    /// Is this Ollama or something else
+    /// </summary>
     string Type { get; set; }
 }

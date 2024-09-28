@@ -2,8 +2,7 @@
 using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 
-namespace Ollama.Ollama
-{
+namespace Ollama.Ollama;
     public class OllamaServer : IAIService
     {
         public OllamaServer(IOllamaService service)
@@ -39,4 +38,3 @@ namespace Ollama.Ollama
 
         public string Type { get; set; }
     }
-}

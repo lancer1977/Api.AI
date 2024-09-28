@@ -12,6 +12,8 @@ public record AiRequestType
         Suffix = "";
     }
 
+    public string Format { get; set; }
+
     [Description("Modile IE llama3.1")]
     public string ModelName { get; set; }
 

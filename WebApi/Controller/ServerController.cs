@@ -26,5 +26,10 @@ public class ServerController : ControllerBase
     {
         return _source.AddOrUpdateServer(server);
     }
+    [HttpPost("[action]")]
+    public Task<AiResponseType> Generate(AiRequestType server)
+    { 
+    }
+
 
 }

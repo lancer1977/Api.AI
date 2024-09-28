@@ -1,17 +1,14 @@
-﻿using Ollama;
-using Ollama.Ollama;
-using PolyhydraGames.AI.Interfaces;
+﻿using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PolyhydraGames.AI.WebApi.Controller;
 
-
 public class ServerSource : IServerSource
 {
     private readonly IHttpClientFactory _clientFactory;
     public Dictionary<ServerDefinitionType, IAIService> Servers { get;   } = new Dictionary<ServerDefinitionType, IAIService>();
-
+    private List<ServerDefinitionType> _onCooldown;
 
     public ServerSource(IConfiguration config, IHttpClientFactory clientFactory)
     {
@@ -27,25 +24,17 @@ public class ServerSource : IServerSource
 
         foreach (var def in definitions)
         {
-            var service = GetService(def);
+            var service = _clientFactory.GetNewService(def);
             Servers.Add(def, service);
         }
     }
 
-    private IAIService GetService(ServerDefinitionType definition)
+    public IAIService GetService(ServerDefinitionType definition)
     {
-        switch (definition.Type)
-        {
-            case "Ollama":
-                var srv = new OllamaService(_clientFactory, definition.ToOllamaConfig());
-                return new OllamaServer(srv);
-            default:
-                throw new Exception($"Not recognized {definition.Type}");
-        }
-
+        var key = Servers.FirstOrDefault(x => x.Key.Id == definition.Id);
+        
+        return Servers[key.Key];
     }
-
-
 
     public Task AddOrUpdateServer(ServerDefinitionType server)
     {

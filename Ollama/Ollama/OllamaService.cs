@@ -89,19 +89,19 @@ public class OllamaService : IOllamaService, ILoadAsync
         }
     }
 
-    public Task<string> GetResponseAsync(string prompt)
+    public Task<AiResponseType> GetResponseAsync(string prompt)
     {
         var payload = prompt.ToGeneratePayload();
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType> GetResponseAsync<T>(GeneratePayload payload)
-    {
-        var response = await GetGenerateResponse(payload);
-        var response  return await response.Create<T?>();
-    }
+    //public async Task<AiResponseType> GetResponseAsync(GeneratePayload payload)
+    //{
+    //    var response = await GetGenerateResponse(payload);
+    //      return await response.CreateAsync();
+    //}
 
-    public async Task<string> GetResponseAsync(GeneratePayload payload)
+    public async Task<AiResponseType> GetResponseAsync(GeneratePayload payload)
     {
         var response = await GetGenerateResponse(payload);
 
@@ -109,8 +109,8 @@ public class OllamaService : IOllamaService, ILoadAsync
         var responseBody = await response.Content.ReadAsStringAsync();
 
         Console.WriteLine($"Response: {responseBody}");
-        var responseList = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        return responseList?.Response ?? "";
+        var ollamaResponse = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
+        return await  AIResponse.Create(ollamaResponse?.Response);
     }
 
     public async Task<string> GetResponseAsync(ChatPayload payload)

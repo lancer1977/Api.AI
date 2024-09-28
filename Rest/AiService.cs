@@ -78,11 +78,7 @@ public class AiService : IAIService, ILoadAsync
         return GetResponseAsync(payload);
     }
 
-    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType payload)
-    {
-        var response = await GetGenerateResponse(payload);
-        return await response.Create<T?>();
-    }
+ 
  
     public async Task<AiResponseType> GetResponseAsync(AiRequestType payload)
     {
@@ -93,6 +89,12 @@ public class AiService : IAIService, ILoadAsync
         var responseList = JsonSerializer.Deserialize<AiResponseType>(responseBody);
         return responseList;
 
+    }
+
+    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
+    {
+        var response = await GetGenerateResponse(request);
+        return await response.Create<T?>();
     }
 
     public async IAsyncEnumerable<string> GetResponseStream(AiRequestType payload)
@@ -114,6 +116,13 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
+    public Task<PersonalityType> GetModels()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string Type { get; set; }
+
     public async Task<List<IPersonality>> GetPersonalities()
     {
         var endpoint = ApiUrl + "/api/tags";
@@ -128,10 +137,7 @@ public class AiService : IAIService, ILoadAsync
         var response = await _client.GetAsync(endpoint);
         return response.IsSuccessStatusCode;
     }
-
-
- 
-
+     
     public async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
     {
         using var client = new HttpClient();

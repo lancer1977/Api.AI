@@ -29,7 +29,7 @@ public class ServerController : ControllerBase
     [HttpPost("[action]")]
     public Task<AiResponseType> Generate(AiRequestType server)
     { 
-
+        return _source.GetResponseAsync(server);
     }
 
 

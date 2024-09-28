@@ -53,5 +53,7 @@ app.UseSwaggerUI();
 app.UseOwnerMiddleware();
 app.UseHttpsRedirection();
 app.MapControllers();
-app.UseAuthorization();
+app.UseAuthorization(); 
+await ServerSource.InitializeAsync(app);
 app.Run();
+

@@ -7,19 +7,31 @@ namespace PolyhydraGames.AI.WebApi.Controller;
 public class ServerSource : IServerSource
 {
     private readonly IHttpClientFactory _clientFactory;
-    public Dictionary<ServerDefinitionType, IAIService> Servers { get;   } = new Dictionary<ServerDefinitionType, IAIService>();
-    private List<ServerDefinitionType> _onCooldown;
+    public Dictionary<ServerDefinitionType, IAIService> Servers { get; } = new Dictionary<ServerDefinitionType, IAIService>();
+    private ServerDefinitionType? _lastDefinition;
 
-    public ServerSource(IConfiguration config, IHttpClientFactory clientFactory)
+    public static void Initialize(IConfiguration config, IServiceProvider provider)
     {
-        _clientFactory = clientFactory;
 
         var section = config.GetSection("OllamaItems");
         var types = section.Get<List<ServerDefinitionType>>();
-        LoadAsync(types);
+        var source = provider.GetRequiredService<IServerSource>();
+        source.Load(types);
     }
 
-    public void LoadAsync(List<ServerDefinitionType> definitions)
+    public static async Task InitializeAsync(WebApplication provider)
+    {
+        Initialize(provider.Configuration, provider.Services);
+    }
+
+    public ServerSource(IHttpClientFactory clientFactory)
+    {
+        _clientFactory = clientFactory;
+
+
+    }
+
+    public void Load(List<ServerDefinitionType> definitions)
     {
 
         foreach (var def in definitions)
@@ -29,10 +41,28 @@ public class ServerSource : IServerSource
         }
     }
 
+    public Task<AiResponseType> GetResponseAsync(AiRequestType request)
+    {
+        return GetService().GetResponseAsync(request);
+    }
+
+    /// <summary>
+    /// So this is where the sauce occurs, we find the most availiabvle IAIService and use it.
+    /// </summary>
+    /// <returns></returns>
+    private IAIService GetService()
+    {
+        var key = Servers.Keys
+            .Where(x => x.Available)
+            .OrderBy(x => x.Priority)
+            .ThenBy(x => x != _lastDefinition)
+            .First();
+        return Servers[key];
+    }
     public IAIService GetService(ServerDefinitionType definition)
     {
         var key = Servers.FirstOrDefault(x => x.Key.Id == definition.Id);
-        
+
         return Servers[key.Key];
     }
 

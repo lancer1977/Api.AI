@@ -17,7 +17,7 @@ public class ServerController : ControllerBase
     [HttpGet("[action]")]
     public Task<IEnumerable<ServerDefinitionType>> Items()
     {
-        return _source.Items();
+        return Task.FromResult(_source.Definitions());
     }
 
     // add a new server

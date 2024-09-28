@@ -14,7 +14,9 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 }
 
     );
+builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
 builder.Services.AddSingleton<IServerSource, ServerSource>();
 //builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));

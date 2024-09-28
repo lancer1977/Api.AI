@@ -1,4 +1,5 @@
-﻿using Ollama.Ollama;
+﻿using Ollama;
+using Ollama.Ollama;
 using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,7 +10,7 @@ namespace PolyhydraGames.AI.WebApi.Controller;
 public class ServerSource : IServerSource
 {
     private readonly IHttpClientFactory _clientFactory;
-    public Dictionary<ServerDefinitionType, IAIService> Servers { get; set; }
+    public Dictionary<ServerDefinitionType, IAIService> Servers { get;   } = new Dictionary<ServerDefinitionType, IAIService>();
 
 
     public ServerSource(IConfiguration config, IHttpClientFactory clientFactory)
@@ -24,26 +25,27 @@ public class ServerSource : IServerSource
     public void LoadAsync(List<ServerDefinitionType> definitions)
     {
 
-        foreach (var server in definitions)
+        foreach (var def in definitions)
         {
-            Servers.Add(server, GetService(server));
+            var service = GetService(def);
+            Servers.Add(def, service);
         }
     }
 
-    private static IAIService GetService(ServerDefinitionType server)
+    private IAIService GetService(ServerDefinitionType definition)
     {
-        switch (server.Type)
+        switch (definition.Type)
         {
-            case "Ollama": 
-                var srv = new OllamaService(_clientFactory,server.ToC)
-                return new OllamaServer(server);
+            case "Ollama":
+                var srv = new OllamaService(_clientFactory, definition.ToOllamaConfig());
+                return new OllamaServer(srv);
             default:
-                throw new Exception($"Not recognized {server.Type}");
+                throw new Exception($"Not recognized {definition.Type}");
         }
 
     }
 
- 
+
 
     public Task AddOrUpdateServer(ServerDefinitionType server)
     {
@@ -59,6 +61,13 @@ public class ServerSource : IServerSource
         return Task.CompletedTask;
     }
 
+    public IEnumerable<ServerDefinitionType> Definitions()
+    {
+        return Servers.Keys;
+    }
 
-
+    public IEnumerable<IAIService> Items()
+    {
+        return Servers.Values;
+    }
 }

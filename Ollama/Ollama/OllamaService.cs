@@ -113,14 +113,14 @@ public class OllamaService : IOllamaService, ILoadAsync
         return await  AIResponse.Create(ollamaResponse?.Response);
     }
 
-    public async Task<string> GetResponseAsync(ChatPayload payload)
+    public async Task<AiResponseType> GetResponseAsync(ChatPayload payload)
     {
         var response = await GetChatResponse(payload);
 
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         var responseList = JsonSerializer.Deserialize<OllamaChatResponse>(responseBody);
-        return responseList.Message.Content;
+        return AIResponse.Create(responseList.Message.Content);
 
     }
 

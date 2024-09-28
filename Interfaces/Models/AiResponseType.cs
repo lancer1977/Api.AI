@@ -23,8 +23,8 @@ public static class AIResponse
         var text = await  message.Content.ReadAsStringAsync();
         return new AiResponseType(text);
     }
-    public static Task<AiResponseType> Create(this string? message)
+    public static AiResponseType Create(this string? message)
     {
-        return Task.FromResult(new AiResponseType(message));
+        return new AiResponseType(message);
     }
 }

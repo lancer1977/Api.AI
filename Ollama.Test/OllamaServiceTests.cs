@@ -122,7 +122,7 @@ public class OllamaServiceTests
         Config = new OllamaConfig()
         {
             ApiUrl = _configuration["Ollama:ApiUrl"],
-            Key = _configuration["Ollama:Key"],
+            DefaultModel = _configuration["Ollama:Key"],
             Background = _configuration["Ollama:Background"]
         };
 

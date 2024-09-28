@@ -5,10 +5,11 @@ namespace PolyhydraGames.AI.Models;
 
 public record AiRequestType
 {
-    public AiRequestType(string prompt)
+    public AiRequestType(string prompt, string format = "")
     {
         ModelName = "llama3.1";
         Prompt = prompt;
+        Format = format;
         Suffix = "";
     }
 
@@ -41,9 +42,9 @@ public record AiRequestType
     //[Description("controls how long the model will stay loaded into memory following the request (default: 5m)")]
     //public string KeepAlive { get; set; } = "5m";
 }
-public record AiRequestType<T> : AiRequestType
-{
-    public AiRequestType(string prompt) : base(prompt)
-    {
-    }
-}
+//public record AiRequestType<T> : AiRequestType
+//{
+//    public AiRequestType(string prompt) : base(prompt)
+//    {
+//    }
+//}

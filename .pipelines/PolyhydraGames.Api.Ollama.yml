@@ -9,7 +9,9 @@ trigger:
   branches:
     include:
     - refs/heads/main 
-
+  paths:
+    include:
+    - Ollama
 jobs:
 - job: Phase_1 
   cancelTimeoutInMinutes: 1

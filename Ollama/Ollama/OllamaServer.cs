@@ -21,7 +21,7 @@ namespace Ollama.Ollama;
         {
             var payload = request.ToGeneratePayload();
             var response = await Service.GetResponseAsync(payload);
-            return new AiResponseType(response);
+            return response;
         }
 
         public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)

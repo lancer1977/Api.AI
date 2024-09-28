@@ -110,7 +110,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
         Console.WriteLine($"Response: {responseBody}");
         var ollamaResponse = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        return await  AIResponse.Create(ollamaResponse?.Response);
+        return    (ollamaResponse?.Response).Create();
     }
 
     public async Task<AiResponseType> GetResponseAsync(ChatPayload payload)
@@ -120,7 +120,7 @@ public class OllamaService : IOllamaService, ILoadAsync
         response.EnsureSuccessStatusCode();
         var responseBody = await response.Content.ReadAsStringAsync();
         var responseList = JsonSerializer.Deserialize<OllamaChatResponse>(responseBody);
-        return AIResponse.Create(responseList.Message.Content);
+        return responseList?.Message.Content.Create() ?? new AiResponseType(string.Empty);
 
     }
 
@@ -161,7 +161,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
 
 
-    public Task<string> GetResponseAsync(IEnumerable<string> payload)
+    public Task<AiResponseType> GetResponseAsync(IEnumerable<string> payload)
     {
         var chats = payload.Select(x => new ChatMessage()
         {

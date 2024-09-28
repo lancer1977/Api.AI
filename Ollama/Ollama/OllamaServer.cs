@@ -30,7 +30,7 @@ namespace Ollama.Ollama
 
         public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)
         {
-            var payload = request.ToGeneratePayload(true);
+            var payload = request.ToGeneratePayload();
             return Service.GetResponseStream(payload);
         }
 

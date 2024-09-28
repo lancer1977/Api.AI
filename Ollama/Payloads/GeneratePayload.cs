@@ -4,6 +4,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Ollama.Payloads;
 
+public record GeneratePayload<T>(string Prompt): GeneratePayload(Prompt);
 public record GeneratePayload(string Prompt)
 {
     /// <summary>
@@ -13,25 +14,27 @@ public record GeneratePayload(string Prompt)
     //'0' which will unload the model immediately after generating a response
     /// </summary>
     [JsonPropertyName("format")]
-    public string Format { get; set; }
-    
+    public string? Format { get; set; }
+
     [JsonPropertyName("model")]
     public string? ModelName { get; set; }
 
+    [JsonPropertyName("options")]
+    public string? Options { get; set; }
+
     [JsonPropertyName("system")]
     [Description("system message to (overrides what is defined in the Modelfile)")]
-    public string System { get; set; } = Prompt;
-    [JsonPropertyName("prompt")]
-    public string Prompt { get; set; } = Prompt;
-    [JsonPropertyName("suffix")]
-    public string Suffix { get; set; }
+    public string? System { get; set; }
+    [JsonPropertyName("prompt")] public string Prompt { get; set; } = Prompt;
+
+    [JsonPropertyName("suffix")] public string Suffix { get; set; } = "";
     [JsonPropertyName("template")]
-    public string Template { get; set; }
+    public string? Template { get; set; }
 
     [JsonPropertyName("context")]
-    public string Context { get; set; }
+    public string? Context { get; set; }
     [JsonPropertyName("stream")]
-    public bool Stream { get; set; }
+    public bool? Stream { get; set; }
     [JsonPropertyName("raw")]
     public bool Raw { get; set; }
     [JsonPropertyName("keep_alive")]

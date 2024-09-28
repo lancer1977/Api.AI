@@ -1,4 +1,4 @@
-# Variable 'NugetPat' was defined in the Variables tab
+ # Variable 'NugetPat' was defined in the Variables tab
 name: $(date:yyyyMMdd)$(rev:.r)
 variables:
 - group: Pat 
@@ -53,6 +53,6 @@ jobs:
       avatar: 'https://scontent-iad3-1.xx.fbcdn.net/v/t39.30808-6/277759422_459407522643032_5740191239763665615_n.png?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=Eh7rt73EuYcAX-1w6EJ&_nc_ht=scontent-iad3-1.xx&oh=00_AfA8K4k2WtaqlaA0CEznY-Hk2DZY3gsdDwPp-XOw3L1B3Q&oe=64121C61'
       messageType: 'content'
       content: 'AI API Completed Build: $(Build.BuildNumber)'
-  #- task: CmdLine@2
-  #  inputs:
-  #    script: 'curl -X POST -H "Content-Type: application/json" http://192.168.0.21:9000/api/stacks/webhooks/0a102063-0683-453d-a120-a74615de434f'
+  - task: CmdLine@2
+    inputs:
+      script: 'curl -X POST -H "Content-Type: application/json" 'https://192.168.0.21:9000/api/stacks/webhooks/358d7b2e-4948-41b0-8e61-d96a2791ce7c'

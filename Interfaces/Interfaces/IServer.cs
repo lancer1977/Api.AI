@@ -2,7 +2,7 @@
 
 namespace PolyhydraGames.AI.Interfaces;
 
-public interface IServer
+public interface IAIService
 {
     Task LoadAsync();
     Task<bool> CheckHealth();

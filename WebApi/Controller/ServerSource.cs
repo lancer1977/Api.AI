@@ -28,11 +28,11 @@ public class ServerSource : IServerSource
         }
     }
 
-    private IAIService GetService(ServerDefinitionType server)
+    private static IAIService GetService(ServerDefinitionType server)
     {
         switch (server.Type)
         {
-            case "Ollama": return new OllamaService(server);
+            case "Ollama": return new OllamaServer(server);
             default:
                 throw new Exception($"Not recognized {server.Type}");
         }
@@ -52,11 +52,9 @@ public class ServerSource : IServerSource
         {
             Servers.Remove(existing);
         }
-        else
-        {
 
-        }
-
+        var serverInstance = GetService(server);
+     Servers.Add(server,);
         return Task.CompletedTask;
     }
      

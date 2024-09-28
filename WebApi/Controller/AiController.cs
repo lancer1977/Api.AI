@@ -17,7 +17,7 @@ public class AiController : ControllerBase
     [HttpGet("[action]")]
     public async Task<IEnumerable<IServer>> Items()
     {
-        var result = await  _viewerService.Items();
+        var result =    _viewerService.Items();
         return result.Cast<IServer>();
     }
 

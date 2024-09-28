@@ -17,7 +17,12 @@ jobs:
     name: Default
   steps:
   - checkout: self
-
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '$(Project.Path)'
+      feedsToUse: 'select'
+      vstsFeed: '015fc12f-cd63-4ab4-8d6a-dc889e53bf70'
   - task: DotNetCoreCLI@2
     inputs:
       command: 'pack'

@@ -1,5 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using PolyhydraGames.AI.WebApi;
+using PolyhydraGames.AI.WebApi.Controller;
 using PolyhydraGames.Core.AspNet.IdentityServices;
 using PolyhydraGames.Core.AspNet.Middleware.Owner;
 using PolyhydraGames.Core.Interfaces;
@@ -13,8 +14,9 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 }
 
     );
-builder.Services.AddSwaggerGen(); 
+builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
+builder.Services.AddSingleton<IServerSource, ServerSource>();
 //builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));
 builder.Services.AddAuthorization(options =>
 {

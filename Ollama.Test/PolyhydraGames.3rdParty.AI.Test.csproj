@@ -39,8 +39,7 @@
 		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\Interfaces\PolyhydraGames.AI.csproj" />
+	<ItemGroup> 
 	  <ProjectReference Include="..\Ollama\Ollama.csproj" /> 
 	</ItemGroup>
 

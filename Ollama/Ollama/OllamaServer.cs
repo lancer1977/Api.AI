@@ -17,10 +17,6 @@ namespace Ollama.Ollama
     
 
         public Task<bool> CheckHealth()=> Service.CheckHealth();
-        public Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType request)
-        {
-            throw new NotImplementedException();
-        }
 
         public   Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
         {
@@ -34,9 +30,11 @@ namespace Ollama.Ollama
             return Service.GetResponseStream(payload);
         }
 
-        public Task<PersonalityType> GetModels()
+        public async Task<PersonalityType> GetModels()
         {
-            throw new NotImplementedException();
+            var models =await Service.GetModels();
+            var personalities = models.Models.Select(x => new PersonalityType(x.Name, x.Model, ""));
+            return personalities;
         }
 
         public string Type { get; set; }

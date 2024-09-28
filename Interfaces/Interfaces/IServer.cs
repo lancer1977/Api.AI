@@ -8,6 +8,7 @@ public interface IAIService
     Task<bool> CheckHealth();
     Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request); 
     IAsyncEnumerable<string> GetResponseStream(AiRequestType request);
-    Task<PersonalityType> GetModels();
+    Task<IEnumerable<PersonalityType>> GetModels();
+
     string Type { get; set; }
 }

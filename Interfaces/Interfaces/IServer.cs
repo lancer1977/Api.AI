@@ -5,7 +5,8 @@ public interface IServer
     string Description { get; set; }
     List<string> Models { get; set; }
     int Priority { get; set; }
-    string Availability { get; set; }
+
+    public bool Available { get; set; }
     int Speed { get; set; }
     string Address { get; set; }
 }

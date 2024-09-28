@@ -10,13 +10,14 @@ using PolyhydraGames.AI.Interfaces;
 
 namespace PolyhydraGames.Ollama.Test;
 
-public   class OllamaServiceTests
+[TestFixture]
+public class OllamaServiceTests
 {
     private IConfiguration _configuration;
     public IOllamaConfig Config { get; set; }
     public IOllamaHostSiteConfig HostConfig { get; set; }
     public IOllamaHostApi HostApi { get; set; }
-    public OllamaService Service { get; set; } 
+    public OllamaService Service { get; init; } 
     public IHttpClientFactory HttpClientFactory { get; set; }
 
     [TestCase("Tell everyone you love them")]
@@ -28,16 +29,26 @@ public   class OllamaServiceTests
     }
     [Test]
     public async Task GetOllamaResponse()
-    {
-        Service = new OllamaService(HttpClientFactory, Config);
+    { 
         var response = await Service.GetResponseAsync(new GeneratePayload(){Prompt = "Who is the best band ever?"});
         Assert.That(response != null);
     }
-
+    [Test]
+    public async Task GetResponse()
+    { 
+        var response = await Service.GetResponseAsync("What is water made of?");
+        Assert.That(response != null);
+    }
+    [Test]
+    public async Task CheckHeath()
+    { 
+        var response = await Service.CheckHealth();
+ 
+        Assert.That(response);
+    }
     [Test]
     public async Task GetOllamaResponseList()
     {
-        Service = new OllamaService(HttpClientFactory, Config);
         var response = Service.GetResponseStream(new GeneratePayload("What do you think of modern punk like the green day?"));
         await foreach (var item in response)
         {
@@ -48,8 +59,7 @@ public   class OllamaServiceTests
     }
     [TestCase("Lancero", "Nirvana - Heart Shaped Box", 80)]
     public async Task GetOllamaChat(string user, string song, int popularity)
-    {
-        Service = new OllamaService(HttpClientFactory, Config);
+    { 
         await ((OllamaService)Service).LoadAsync();
         var response = await Service.GetResponseAsync(new ChatPayload()
         {
@@ -84,8 +94,7 @@ public   class OllamaServiceTests
     }
     [TestCase("Lancero","Nirvana - Heart Shaped Box", 80)]
     public async Task GetOllamaResponseList(string user,string song, int popularity)
-    {
-        Service = new OllamaService(HttpClientFactory, Config);
+    { 
         var response = Service.GetResponseStream(new GeneratePayload($"What do you think of {user} and their song {song} which is {popularity} popular?"));
  
         await foreach (var item in response)
@@ -123,6 +132,8 @@ public   class OllamaServiceTests
         HttpClientFactory = mock.Object;
 
         HostApi = new OllamaHostApi(HostConfig);
+
+        Service = new OllamaService(HttpClientFactory, Config);
     }
 
 }

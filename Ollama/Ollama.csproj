@@ -10,12 +10,6 @@
 		<PackageId>PolyhydraGames.Ollama</PackageId>
 		<Title>Ollama LLM Rest calls</Title>
 		<Description>Rest calls for Ollama.</Description>
-		<Authors>
-			<Author>
-				<Name>Christopher Richmond</Name>
-				<Email>lancer1977@gmail.com</Email>
-			</Author>
-		</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRepositoryType>nuget.org</PackageRepositoryType>
 
@@ -27,7 +21,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-		<PackageReference Include="PolyhydraGames.AI" Version="1.0.0.13" />
+		<PackageReference Include="PolyhydraGames.AI" Version="1.0.0.14" />
 		<PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
 	</ItemGroup>
 

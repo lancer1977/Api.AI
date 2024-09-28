@@ -14,5 +14,6 @@ namespace PolyhydraGames.AI.Interfaces
         Task<AiResponseType> GetResponseAsync(AiRequestType payload);
         IAsyncEnumerable<string> GetResponseStream(AiRequestType payload);
         Task<List<IPersonality>> GetPersonalities();
+        ServerDefinitionType ServerDefinition { get; set; }
     }
 }

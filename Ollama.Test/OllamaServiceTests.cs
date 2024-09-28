@@ -30,7 +30,7 @@ public class OllamaServiceTests
     [Test]
     public async Task GetOllamaResponse()
     { 
-        var response = await Service.GetResponseAsync(new GeneratePayload(){Prompt = "Who is the best band ever?"});
+        var response = await Service.GetResponseAsync(new GeneratePayload("Who is the best band ever?"));
         Assert.That(response != null);
     }
     [Test]

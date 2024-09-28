@@ -25,7 +25,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Seq.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="PolyhydraGames.AI" Version="1.0.0.9" />
+    <PackageReference Include="PolyhydraGames.AI" Version="1.0.0.10" />
 	</ItemGroup>
 
   <ItemGroup>

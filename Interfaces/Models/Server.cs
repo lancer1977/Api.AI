@@ -11,5 +11,6 @@ namespace PolyhydraGames.AI.Models
         public bool Available { get; set; }
         public int Speed { get; set; }
         public string Address { get; set; }
+        public string Type { get; set; }
     }
 }

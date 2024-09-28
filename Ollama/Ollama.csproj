@@ -27,7 +27,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-		<PackageReference Include="PolyhydraGames.AI" Version="1.0.0.9" />
+		<PackageReference Include="PolyhydraGames.AI" Version="1.0.0.10" />
 		<PackageReference Include="PolyhydraGames.Core.Interfaces" Version="2.0.0.41" />
 	</ItemGroup>
 

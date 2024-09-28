@@ -8,7 +8,9 @@ public class ServerSource : IServerSource
     public ServerSource(IConfiguration config)
     {
         Servers = new List<ServerType>();
-        config.GetSection("OllamaItems").Get<List<ServerType>>();
+
+        var section = config.GetSection("OllamaItems");
+          Servers = section.Get<List<ServerType>>();
 
     }
     public   Task AddOrUpdateServer(ServerType server)

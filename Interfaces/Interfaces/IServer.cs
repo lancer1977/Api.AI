@@ -9,4 +9,5 @@ public interface IServer
     public bool Available { get; set; }
     int Speed { get; set; }
     string Address { get; set; }
+    string Type { get; set; }
 }

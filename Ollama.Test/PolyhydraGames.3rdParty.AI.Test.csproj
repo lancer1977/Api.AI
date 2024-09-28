@@ -41,8 +41,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Interfaces\PolyhydraGames.AI.csproj" />
-	  <ProjectReference Include="..\Ollama\Ollama.csproj" />
-	  <ProjectReference Include="..\PolyhydraGames.Ollama\PolyhydraGames.Ollama.csproj" />
+	  <ProjectReference Include="..\Ollama\Ollama.csproj" /> 
 	</ItemGroup>
 
 	<ItemGroup>

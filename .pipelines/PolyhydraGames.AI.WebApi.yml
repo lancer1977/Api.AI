@@ -55,4 +55,4 @@ jobs:
       content: 'AI API Completed Build: $(Build.BuildNumber)'
   - task: CmdLine@2
     inputs:
-      script: 'curl -X POST -H "Content-Type: application/json" 'https://192.168.0.21:9000/api/stacks/webhooks/358d7b2e-4948-41b0-8e61-d96a2791ce7c'
+      script: 'curl -X POST -H "Content-Type: application/json" http://192.168.0.21:9000/api/stacks/webhooks/358d7b2e-4948-41b0-8e61-d96a2791ce7c'

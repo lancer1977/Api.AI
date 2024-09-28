@@ -19,13 +19,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
 builder.Services.AddSingleton<IServerSource, ServerSource>();
-//builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLStreamingConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("Streaming", "SqlPassword") ?? throw new NullReferenceException("Streaming factory")));
+//builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLAIConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("AI", "SqlPassword") ?? throw new NullReferenceException("AI factory")));
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("ApiScope", policy =>
     {
         policy.RequireAuthenticatedUser();
-        //policy.RequireClaim("scope", "Streaming");
+        //policy.RequireClaim("scope", "AI");
     });
 });
 builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>

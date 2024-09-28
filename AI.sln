@@ -19,6 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolyhydraGames.AI.Rest", "R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".pipelines", ".pipelines", "{D9DBF87C-FF7D-4F9D-B5A0-6C309A5583E7}"
 	ProjectSection(SolutionItems) = preProject
+		.pipelines\PolyhydraGames.AI.WebApi.yml = .pipelines\PolyhydraGames.AI.WebApi.yml
 		.pipelines\PolyhydraGames.AI.yml = .pipelines\PolyhydraGames.AI.yml
 		.pipelines\PolyhydraGames.Api.Ollama.yml = .pipelines\PolyhydraGames.Api.Ollama.yml
 	EndProjectSection

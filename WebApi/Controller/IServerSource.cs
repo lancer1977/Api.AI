@@ -1,5 +1,6 @@
 ﻿using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
+using System.Collections.ObjectModel;
 
 namespace PolyhydraGames.AI.WebApi.Controller
 {
@@ -10,5 +11,7 @@ namespace PolyhydraGames.AI.WebApi.Controller
         Task AddOrUpdateServer(ServerDefinitionType server);
         IEnumerable<ServerDefinitionType> Definitions();
         IEnumerable<IAIService> Items();
+        void CheckHealth();
+        IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers { get; }
     }
 }

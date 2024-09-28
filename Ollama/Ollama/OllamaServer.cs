@@ -30,9 +30,9 @@ namespace Ollama.Ollama
             return Service.GetResponseStream(payload);
         }
 
-        public async Task<PersonalityType> GetModels()
+        public async Task<IEnumerable<PersonalityType>> GetModels()
         {
-            var models =await Service.GetModels();
+            var models = await Service.GetModels();
             var personalities = models.Models.Select(x => new PersonalityType(x.Name, x.Model, ""));
             return personalities;
         }

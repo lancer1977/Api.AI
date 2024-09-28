@@ -19,11 +19,11 @@ public class AiService : IAIService, ILoadAsync
     private readonly JsonSerializerOptions _options;
     private List<PersonalityType> Personalities { get; set; }
     private List<string> PersonalityNames { get; set; }
-    public AiService(IHttpClientFactory clientFactory, IOllamaConfig config)
+    public AiService(HttpClient clientFactory, IOllamaConfig config)
     {
         _config = config;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-        _client = clientFactory.CreateClient();
+        _client = clientFactory;
     }
 
     public async Task LoadAsync()
@@ -72,11 +72,11 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
-    public Task<AiResponseType> GetResponseAsync(string prompt)
-    {
-        var payload = new AiRequestType(prompt);
-        return GetResponseAsync(payload);
-    }
+    //public Task<AiResponseType> GetResponseAsync(string prompt)
+    //{
+    //    var payload = new AiRequestType(prompt);
+    //    return GetResponseAsync(payload);
+    //}
 
  
  
@@ -116,10 +116,17 @@ public class AiService : IAIService, ILoadAsync
         }
     }
 
-    public Task<PersonalityType> GetModels()
-    {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<PersonalityType>> GetModels()
+    { 
+
+        var endpoint = ApiUrl + "/v1/models"; 
+        var response = await _client.GetAsync(endpoint);
+        var organized = response.IsSuccessStatusCode;
+        var items = JsonSerializer.Deserialize<List<PersonalityType>>(await response.Content.ReadAsStringAsync() ?? "");
+
+        return items;
     }
+
 
     public string Type { get; set; }
 

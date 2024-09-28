@@ -11,8 +11,5 @@ public class ChatMessage
     public string Content { get; set; }
 
     [JsonPropertyName("images")]
-    public List<string> Images { get; set; }
-
-    //[JsonPropertyName("tool_calls")]
-    //public List<string> ToolCalls { get; set; }
+    public List<string> Images { get; set; } 
 }

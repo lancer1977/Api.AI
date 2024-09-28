@@ -23,15 +23,21 @@ public class OllamaServer : IServer
     
 
     public Task<bool> CheckHealth()=> Service.CheckHealth();
-
     public Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType request)
     {
-        request.ToGeneratePayload(out var payload);
+        throw new NotImplementedException();
+    }
+
+    public   Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
+    {
+        var payload = request.ToGeneratePayload<T>();
+        return Service.GetResponseAsync<T>(payload); 
     }
 
     public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)
     {
-        throw new NotImplementedException();
+        var payload = request.ToGeneratePayload(true);
+        return Service.GetResponseStream(payload);
     }
 
     public Task<PersonalityType> GetModels()

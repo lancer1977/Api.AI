@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.VisualBasic.CompilerServices;
 using PolyhydraGames.AI.Models;
 
 namespace Ollama.Models;
@@ -6,11 +7,14 @@ public static class GeneratePayloadExtensions
 {
     public static GeneratePayload ToGeneratePayload<T>(this AiRequestType<T> request)
     {
-        return new GeneratePayload(request.UserPrompt);
+        return new GeneratePayload(request.UserPrompt){};
     }
-    public static GeneratePayload ToGeneratePayload(this AiRequestType request)
+    public static GeneratePayload ToGeneratePayload(this AiRequestType request, bool stream = false)
     {
-        return new GeneratePayload(request.UserPrompt);
+        return new GeneratePayload(request.UserPrompt)
+        {
+            Stream = stream
+        };
     }
     public static GeneratePayload ToGeneratePayload(this string prompt)
     {
@@ -26,6 +30,33 @@ public static class GeneratePayloadExtensions
     public static GeneratePayload WithHours(this GeneratePayload payload, int hours)
     {
         payload.KeepAlive = $"{hours}m";
+        return payload;
+    }
+    public static ChatPayload ToChatPayload<T>(this AiRequestType request)
+    {
+
+        var messages = new List<ChatMessage>(request.additionalMessages.Select(x => new ChatMessage() { Content = x }));
+        var payload = new ChatPayload()
+        {
+            Messages = messages,
+            Format = "json",
+            Model = request.UserPrompt,
+            Stream = false,
+
+        };
+        return payload;
+    }
+    public static ChatPayload ToChatPayload(this AiRequestType request)
+    {
+
+        var messages = new List<ChatMessage>(request.additionalMessages.Select(x=> new ChatMessage(){Content = x}));
+        var payload =  new ChatPayload()
+        {
+            Messages = messages, 
+            Model = request.UserPrompt,
+            Stream = false,
+
+        };
         return payload;
     }
 }

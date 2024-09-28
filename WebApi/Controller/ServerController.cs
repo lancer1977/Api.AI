@@ -26,11 +26,19 @@ public class ServerController : ControllerBase
     {
         return _source.AddOrUpdateServer(server);
     }
+
     [HttpPost("[action]")]
-    public Task<AiResponseType> Generate(AiRequestType server)
-    { 
-        return _source.GetResponseAsync(server);
+    public async Task<AiResponseType> Generate(AiRequestType server)
+    {
+        try
+        {
+
+            var src = await _source.GetResponseAsync(server);
+            return src;
+        }
+        catch(Exception ex)
+        {
+            return  new AiResponseType(ex.Message);
+        }
     }
-
-
 }

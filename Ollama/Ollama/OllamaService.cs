@@ -16,7 +16,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
     //private readonly IOllamaConfig _config;
     private string ApiUrl => _config.ApiUrl;
-    private string DefaultModel => _config.Key;
+    private string DefaultModel => _config.DefaultModel;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
     private List<ModelDetail> Models { get; set; }
@@ -36,6 +36,10 @@ public class OllamaService : IOllamaService, ILoadAsync
     }
     private StringContent GetContent(GeneratePayload payload)
     {
+        if (!ModelNames.Any())
+        {
+            throw new NullReferenceException("No models loaded");
+        }
         if (string.IsNullOrEmpty(payload.ModelName) || !ModelNames.Contains(payload.ModelName))
         {
             payload.ModelName = DefaultModel;
@@ -62,7 +66,8 @@ public class OllamaService : IOllamaService, ILoadAsync
         {
             var endpoint = ApiUrl + "/api/generate";
             Debug.WriteLine(endpoint);
-            var response = await _client.PostAsync(endpoint, GetContent(payload));
+            var content = GetContent(payload);
+            var response = await _client.PostAsync(endpoint,content);
             return response;
         }
         catch (HttpRequestException e)

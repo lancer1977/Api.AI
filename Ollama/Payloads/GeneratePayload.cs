@@ -14,7 +14,7 @@ public record GeneratePayload(string Prompt)
     //'0' which will unload the model immediately after generating a response
     /// </summary>
     [JsonPropertyName("format")]
-    public string? Format { get; set; }
+    public string? Format { get; set; } = "";
 
     [JsonPropertyName("model")]
     public string? ModelName { get; set; }

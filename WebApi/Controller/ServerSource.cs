@@ -13,22 +13,25 @@ public class ServerSource : IServerSource
     public IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers => _servers;
     private ServerDefinitionType? _lastDefinition;
     private Timer _healthTimer;
-    private static IServerSource Initialize(IConfiguration config, IServiceProvider provider)
+    private static async Task<IServerSource> InitializeAsync(IConfiguration config, IServiceProvider provider)
     {
 
         var section = config.GetSection("OllamaItems");
         var types = section.Get<List<ServerDefinitionType>>();
+        foreach(var type in types)
+        {
+            type.Id = Guid.NewGuid();
+        }
         var source = provider.GetRequiredService<IServerSource>();
-        source.Load(types);
+     
+       await  source.LoadAsync(types);
         return source;
     }
 
     public static async Task InitializeAsync(WebApplication provider)
     {
-        var source = Initialize(provider.Configuration, provider.Services);
-
+        var source = await InitializeAsync(provider.Configuration, provider.Services);
         source.CheckHealth();
-
     }
 
     public void CheckHealth()
@@ -41,13 +44,17 @@ public class ServerSource : IServerSource
                 try
                 {
                     server.Key.Available = await server.Value.CheckHealth();
+                    if (server.Key.Available)
+                    {
+                        await server.Value.LoadAsync();
+                    }
                 }
                 catch (Exception ex)
                 {
                     server.Key.Available = false;
                     _logger.LogError(ex, "Exception calling checkhealth for " + server.Key.Name);
                 }
-                _logger.LogInformation(server.Key.Name + " checkhealth:" + server.Key.Available);
+                    _logger.LogInformation(server.Key.Name + " checkhealth:" + server.Key.Available);
 
 
 
@@ -64,12 +71,13 @@ public class ServerSource : IServerSource
         _healthTimer.Change(1 * 5 * 1000, Timeout.Infinite);
     }
 
-    public void Load(List<ServerDefinitionType> definitions)
+    public async Task LoadAsync(List<ServerDefinitionType> definitions)
     {
 
         foreach (var def in definitions)
         {
-            var service = _clientFactory.GetNewService(def);
+            
+            var service = await _clientFactory.GetNewService(def);
             _servers.Add(def, service);
         }
     }
@@ -113,13 +121,6 @@ public class ServerSource : IServerSource
         return Task.CompletedTask;
     }
 
-    public IEnumerable<ServerDefinitionType> Definitions()
-    {
-        return _servers.Keys;
-    }
-
-    public IEnumerable<IAIService> Items()
-    {
-        return _servers.Values;
-    }
+    public IEnumerable<ServerDefinitionType> Definitions()=> _servers.Keys; 
+    public IEnumerable<IAIService> Items() => _servers.Values; 
 }

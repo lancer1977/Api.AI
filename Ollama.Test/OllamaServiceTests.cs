@@ -6,6 +6,7 @@ using Ollama;
 using Ollama.Host;
 using Ollama.Models;
 using Ollama.Ollama;
+using Ollama.Payloads;
 using PolyhydraGames.AI.Interfaces; 
 
 namespace PolyhydraGames.Ollama.Test;

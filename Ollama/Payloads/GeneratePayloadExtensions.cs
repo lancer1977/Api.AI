@@ -13,7 +13,7 @@ namespace Ollama.Payloads
         }
         public static GeneratePayload ToGeneratePayload<T>(this AiRequestType<T> request)
         {
-            return new GeneratePayload(request.UserPrompt) { };
+            return new GeneratePayload(request.Prompt) { };
         }
  
         public static GeneratePayload ToGeneratePayload(this string prompt)

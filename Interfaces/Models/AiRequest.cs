@@ -5,22 +5,26 @@ namespace PolyhydraGames.AI.Models;
 
 public record AiRequestType
 {
+    public AiRequestType(string prompt)
+    {
+        ModelName = "llama3.1";
+        Prompt = prompt;
+        Suffix = "";
+    }
 
     [Description("Modile IE llama3.1")]
-    public string ModelName { get; set; } = "llama3.1";
-
-    [Description("Override for the system")]
-    public string? System { get; set; }
+    public string ModelName { get; set; }
 
     [Description("The prompt to generate the response for")]
-    public string? Prompt { get; set; }
+    public string Prompt { get; set; }
 
     [Description("the text after the model response")]
     public string Suffix { get; set; }
 
     [Description("Modelfile override")]
     public string? Template { get; set; }
-
+    [Description("Override for the system")]
+    public string? System { get; set; }
     [Description("Chat history")]
     public string? Context { get; set; }
 
@@ -35,4 +39,9 @@ public record AiRequestType
     //[Description("controls how long the model will stay loaded into memory following the request (default: 5m)")]
     //public string KeepAlive { get; set; } = "5m";
 }
-public record AiRequestType<T> : AiRequestType;
+public record AiRequestType<T> : AiRequestType
+{
+    public AiRequestType(string prompt) : base(prompt)
+    {
+    }
+}

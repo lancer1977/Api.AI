@@ -6,7 +6,7 @@ public interface IAIService
 {
     Task LoadAsync();
     Task<bool> CheckHealth();
-    Task<AiResponseType> GetResponseAsync<T>(AiRequestType request); 
+    Task<AiResponseType> GetResponseAsync(AiRequestType request); 
     IAsyncEnumerable<string> GetResponseStream(AiRequestType request);
     Task<IEnumerable<PersonalityType>> GetModels();
     /// <summary>

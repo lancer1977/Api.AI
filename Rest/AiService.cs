@@ -91,11 +91,11 @@ public class AiService : IAIService, ILoadAsync
 
     }
 
-    public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
-    {
-        var response = await GetGenerateResponse(request);
-        return await response.Create<T?>();
-    }
+    //public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
+    //{
+    //    var response = await GetGenerateResponse(request);
+    //    return await response.Create<T?>();
+    //}
 
     public async IAsyncEnumerable<string> GetResponseStream(AiRequestType payload)
     {

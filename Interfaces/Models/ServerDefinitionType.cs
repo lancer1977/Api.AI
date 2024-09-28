@@ -12,5 +12,6 @@ namespace PolyhydraGames.AI.Models
         public int Speed { get; set; }
         public string Address { get; set; }
         public string Type { get; set; }
+        public Guid Id { get; set; }
     }
 }

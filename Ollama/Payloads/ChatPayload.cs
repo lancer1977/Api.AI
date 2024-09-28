@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
+using Ollama.Models;
 
-namespace Ollama.Models;
+namespace Ollama.Payloads;
 
 public class ChatPayload
 {

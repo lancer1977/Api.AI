@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Ollama.Models;
+using Ollama.Payloads;
 using PolyhydraGames.AI;
 using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
@@ -35,9 +36,9 @@ public class OllamaService : IOllamaService, ILoadAsync
     }
     private StringContent GetContent(GeneratePayload payload)
     {
-        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
+        if (string.IsNullOrEmpty(payload.ModelName) || !ModelNames.Contains(payload.ModelName))
         {
-            payload.Model = DefaultModel;
+            payload.ModelName = DefaultModel;
         }
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");

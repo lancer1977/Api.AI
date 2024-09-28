@@ -1,4 +1,4 @@
-﻿using Ollama.Models;
+﻿using Ollama.Payloads;
 using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 

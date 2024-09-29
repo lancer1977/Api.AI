@@ -10,7 +10,7 @@ using PolyhydraGames.Core.RestfulService;
 namespace PolyhydraGames.AI.Rest;
 
 public class AiRestService : RestServiceBase, IAIService, ILoadAsync
-{ 
+{
     private readonly JsonSerializerOptions _options;
     private List<PersonalityType> Personalities { get; set; }
     private List<string> PersonalityNames { get; set; }
@@ -21,10 +21,10 @@ public class AiRestService : RestServiceBase, IAIService, ILoadAsync
 
     public string Type { get; set; }
     protected override string Service { get; } = "AI";
-    public AiRestService(IEndpointFactory endpoint, IHttpService httpService) : base(endpoint,httpService)
-    { 
+    public AiRestService(IEndpointFactory endpoint, IHttpService httpService) : base(endpoint, httpService)
+    {
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-    
+
     }
 
     public async Task LoadAsync()
@@ -33,27 +33,22 @@ public class AiRestService : RestServiceBase, IAIService, ILoadAsync
         Personalities = modelResponse.Cast<PersonalityType>().ToList();
         PersonalityNames = Personalities.Select(x => x.Name).ToList();
     }
-    private StringContent GetContent(AiRequestType payload)
-    { 
-        var jsonPayload = JsonSerializer.Serialize(payload);
-        var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-        return content;
-    }
- 
-    private   Task<AiResponseType> Generate(AiRequestType payload)
+
+
+    public Task<AiResponseType> Generate(AiRequestType payload)
     {
         return Post<AiResponseType, AiRequestType>(payload);
     }
-    public   Task<AiResponseType> Chat(AiRequestType payload)
+    public Task<AiResponseType> Chat(AiRequestType payload)
     {
         return Post<AiResponseType, AiRequestType>(payload);
-      
+
     }
 
 
-    public async Task<AiResponseType> GetResponseAsync(AiRequestType payload)
+    public   Task<AiResponseType> GetResponseAsync(AiRequestType payload)
     {
-        throw new NotImplementedException("GetResponseAsync");
+        return Generate(payload); 
     }
 
     public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)
@@ -62,24 +57,21 @@ public class AiRestService : RestServiceBase, IAIService, ILoadAsync
     }
 
 
-    public   Task<List<ServerDefinitionType>> GetServerDefinitions()
+    public Task<List<ServerDefinitionType>> GetServerDefinitions()
     {
         return Get<List<ServerDefinitionType>>("Items");
     }
-
-
-
 
     public async Task<List<IPersonality>> GetPersonalities()
     {
         var result = await Get<List<PersonalityType>>();
         return result?.Cast<IPersonality>().ToList() ?? throw new NullReferenceException("GetModels returned a null response");
     }
-    public async Task<bool> CheckHealth()
+    public async Task<bool> HealthCheck()
     {
-        return await Get<bool>(); 
+        return await Get<bool>();
     }
-     
+
     public async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
     {
         using var client = new HttpClient();

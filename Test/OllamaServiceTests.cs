@@ -57,7 +57,7 @@ public class RestServiceTests : BaseTest
     [Test]
     public async Task CheckHealth()
     {
-        var result = await _ai.CheckHealth();
+        var result = await _ai.HealthCheck();
         Assert.That(result);
     }
     [Test]

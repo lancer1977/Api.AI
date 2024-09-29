@@ -11,7 +11,7 @@ namespace PolyhydraGames.AI.WebApi
         Task AddOrUpdateServer(ServerDefinitionType server);
         IEnumerable<ServerDefinitionType> Definitions();
         IEnumerable<IAIService> Items();
-        void CheckHealth();
+        void HealthCheck();
         IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers { get; }
     }
 }

@@ -33,10 +33,10 @@ public class ServerSource : IServerSource
     public static async Task InitializeAsync(WebApplication provider)
     {
         var source = await InitializeAsync(provider.Configuration, provider.Services);
-        source.CheckHealth();
+        source.HealthCheck();
     }
 
-    public void CheckHealth()
+    public void HealthCheck()
     {
         Task.Run(async () =>
         {
@@ -45,7 +45,7 @@ public class ServerSource : IServerSource
 
                 try
                 {
-                    server.Key.Available = await server.Value.CheckHealth();
+                    server.Key.Available = await server.Value.HealthCheck();
                     if (server.Key.Available)
                     {
                         await server.Value.LoadAsync();
@@ -69,7 +69,7 @@ public class ServerSource : IServerSource
     {
         _logger = logger;
         _clientFactory = clientFactory;
-        _healthTimer = new Timer(new TimerCallback((x) => CheckHealth()), null, Timeout.Infinite, Timeout.Infinite);
+        _healthTimer = new Timer(_ => HealthCheck(), null, Timeout.Infinite, Timeout.Infinite);
         _healthTimer.Change(1 * 5 * 1000, Timeout.Infinite);
     }
 

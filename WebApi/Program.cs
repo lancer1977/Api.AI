@@ -6,18 +6,22 @@ using PolyhydraGames.Core.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
-builder.Services.AddControllers().AddJsonOptions(x =>
-{
-    //x.JsonSerializerOptions.Converters.Add(new InterfaceListConverter<IDefinition, Definition>());
-    //x.JsonSerializerOptions.Converters.Add(new InterfaceIListConverter<IDefinition, Definition>());
-}
 
-    );
+
 builder.Services.AddHealthChecks();
-builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient();
-builder.Services.AddScoped<IIdentityService, ApiIdentityService>();
-builder.Services.AddSingleton<IServerSource, ServerSource>();
+builder.Services.AddSwaggerGen()
+    .AddHttpClient()
+    .AddLogging(x =>
+    {
+        x.AddConsole();
+        x.AddSeq(builder.Configuration.GetSection("Seq"));
+
+#if !DEBUG
+ x.AddApplicationInsights(configureTelemetryConfiguration: (config) => config.ConnectionString = builder.Configuration.GetConnectionString("MSInsights"), configureApplicationInsightsLoggerOptions: (options) => { });
+#endif
+    })
+    .AddScoped<IIdentityService, ApiIdentityService>()
+    .AddSingleton<IServerSource, ServerSource>();
 //builder.Services.AddScoped<IDBConnectionFactory>(x => new SQLAIConnectionFactory(x.GetService<IConfiguration>()?.GetConnString("AI", "SqlPassword") ?? throw new NullReferenceException("AI factory")));
 builder.Services.AddAuthorization(options =>
 {
@@ -35,7 +39,11 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             ValidateAudience = false,
         };
     });
-
+builder.Services.AddControllers().AddJsonOptions(x =>
+{
+    //x.JsonSerializerOptions.Converters.Add(new InterfaceListConverter<IDefinition, Definition>());
+    //x.JsonSerializerOptions.Converters.Add(new InterfaceIListConverter<IDefinition, Definition>());
+});
 //builder.ConfigureAuthsenticationServices();
 var app = builder.Build();
 
@@ -52,7 +60,7 @@ app.UseSwaggerUI();
 app.UseOwnerMiddleware();
 app.UseHttpsRedirection();
 app.MapControllers();
-app.UseAuthorization(); 
+app.UseAuthorization();
 app.MapHealthChecks("/healthcheck");
 await ServerSource.InitializeAsync(app);
 app.Run();

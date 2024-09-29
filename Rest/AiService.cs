@@ -11,6 +11,9 @@ using PolyhydraGames.Core.RestfulService;
 
 namespace PolyhydraGames.AI.Rest;
 
+public interface IAIEndpoint : IEndpointFactory{
+
+}
 public class AiRestService : RestServiceBase, IAIService, ILoadAsync
 {
     private readonly JsonSerializerOptions _options;
@@ -20,7 +23,7 @@ public class AiRestService : RestServiceBase, IAIService, ILoadAsync
 
     public string Type { get; set; }
     protected override string Service { get; } = "ai";
-    public AiRestService(IEndpointFactory endpoint, IHttpService httpService, ILogger<AiRestService> logger) : base(endpoint, httpService, logger)
+    public AiRestService(IAIEndpoint endpoint, IHttpService httpService, ILogger<AiRestService> logger) : base(endpoint, httpService, logger)
     {
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
     }

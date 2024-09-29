@@ -4,5 +4,5 @@
 public record AiResponseType(string? Message)
 {
     public bool IsSuccess => string.IsNullOrEmpty(Message);
-    public int? Context { get; set; }
+    public List<int>? Context { get; set; }
 }

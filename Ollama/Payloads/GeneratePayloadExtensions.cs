@@ -1,10 +1,19 @@
-﻿using PolyhydraGames.AI.Models;
+﻿using Ollama.Models;
+using PolyhydraGames.AI.Models;
 using System.IO;
 
-namespace Ollama.Payloads
-{
-    public static class GeneratePayloadExtensions
+namespace Ollama.Payloads;
+
+public static class GeneratePayloadExtensions
     {
+        public static AiResponseType ToResponse(this OllamaResponse response)
+        {
+         return new AiResponseType(response.Response)
+         { 
+                Context = response.Context
+            };
+         }
+        }
         public static GeneratePayload ToGeneratePayload(this AiRequestType request)
         {
             return new GeneratePayload(request.Prompt)
@@ -40,4 +49,3 @@ namespace Ollama.Payloads
         }
      
     }
-}

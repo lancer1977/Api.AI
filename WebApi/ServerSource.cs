@@ -1,5 +1,6 @@
 ﻿using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
+using PolyhydraGames.Ollama.Servers;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PolyhydraGames.AI.WebApi;
@@ -11,6 +12,7 @@ public class ServerSource : IServerSource
 
     private readonly ILogger<ServerSource> _logger;
     private readonly IHttpClientFactory _clientFactory;
+    private readonly ILoggerFactory _loggerFactory;
     private readonly Dictionary<ServerDefinitionType, IAIService> _servers = new Dictionary<ServerDefinitionType, IAIService>();
     public IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers => _servers;
     private ServerDefinitionType? _lastDefinition;
@@ -65,10 +67,11 @@ public class ServerSource : IServerSource
         });
     }
 
-    public ServerSource(ILogger<ServerSource> logger, IHttpClientFactory clientFactory)
+    public ServerSource(ILogger<ServerSource> logger, IHttpClientFactory clientFactory, ILoggerFactory loggerFactory)
     {
         _logger = logger;
         _clientFactory = clientFactory;
+        _loggerFactory = loggerFactory;
         _healthTimer = new Timer(_ => HealthCheck(), null, Timeout.Infinite, Timeout.Infinite);
         _healthTimer.Change(1 * 5 * 1000, Timeout.Infinite);
     }
@@ -79,7 +82,7 @@ public class ServerSource : IServerSource
         foreach (var def in definitions)
         {
 
-            var service = await _clientFactory.GetNewService(def);
+            var service = await _clientFactory.GetNewService(def, _loggerFactory.CreateLogger<OllamaService>());
             _servers.Add(def, service);
         }
     }

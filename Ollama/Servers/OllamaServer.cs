@@ -15,7 +15,7 @@ namespace PolyhydraGames.Ollama.Servers;
         public Task LoadAsync()=> Service.LoadAsync();
     
 
-        public Task<bool> CheckHealth()=> Service.CheckHealth();
+        public Task<bool> HealthCheck()=> Service.CheckHealth();
 
         public  async Task<AiResponseType> GetResponseAsync(AiRequestType request)
         {

@@ -29,7 +29,7 @@ public record AiRequestType
     [Description("Override for the system")]
     public string? System { get; set; }
     [Description("Chat history")]
-    public string? Context { get; set; }
+    public int? Context { get; set; }
 
     [Description("additional model parameters listed in the documentation for the Modelfile such as temperature")]
     public string? Options { get; set; }

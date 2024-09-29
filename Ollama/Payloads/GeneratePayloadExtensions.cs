@@ -20,21 +20,7 @@ namespace Ollama.Payloads
 
             };
         }
-        public static GeneratePayload ToGeneratePayload<T>(this AiRequestType<T> request)
-        {
-            return new GeneratePayload<T>(request.Prompt)
-            {
-                Stream = request.Stream,
-                Model = request.ModelName,
-                Options = request.Options,
-                Context = request.Context,
-                Template = request.Template,
-                System = request.System,
-                Suffix = request.Suffix,
-                Raw = request.Raw
-
-            };
-        }
+ 
  
         public static GeneratePayload ToGeneratePayload(this string prompt)
         {

@@ -1,7 +1,7 @@
-﻿using Ollama;
-using Ollama.Ollama;
-using PolyhydraGames.AI.Interfaces;
+﻿using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
+using PolyhydraGames.Ollama;
+using PolyhydraGames.Ollama.Servers;
 
 namespace PolyhydraGames.AI.WebApi;
 public static class Help
@@ -11,7 +11,7 @@ public static class Help
         switch (def.Type)
         {
             case "Ollama":
-                var srv = new OllamaService(factory, def.ToOllamaConfig());
+                var srv = new OllamaService(factory, def.ToOllamaConfig("ollama3.1:latest"));
                 var server = new OllamaServer(srv);
                 await server.Initialize(def);
                 return server;

@@ -40,14 +40,14 @@ public class OllamaService : IOllamaService, ILoadAsync
         {
             throw new NullReferenceException("No models loaded");
         }
-        if (string.IsNullOrEmpty(payload.ModelName) || !ModelNames.Contains(payload.ModelName))
+        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
         {
-            payload.ModelName = DefaultModel;
+            payload.Model = DefaultModel;
         }
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
         return content;
-    }
+        }
 
     private StringContent GetContent(ChatPayload payload)
     {

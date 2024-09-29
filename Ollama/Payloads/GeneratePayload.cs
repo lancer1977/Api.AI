@@ -17,7 +17,7 @@ public record GeneratePayload(string Prompt)
     public string? Format { get; set; } = "";
 
     [JsonPropertyName("model")]
-    public string? ModelName { get; set; }
+    public string? Model { get; set; }
 
     [JsonPropertyName("options")]
     public string? Options { get; set; }
@@ -25,14 +25,17 @@ public record GeneratePayload(string Prompt)
     [JsonPropertyName("system")]
     [Description("system message to (overrides what is defined in the Modelfile)")]
     public string? System { get; set; }
-    [JsonPropertyName("prompt")] public string Prompt { get; set; } = Prompt;
+    [JsonPropertyName("prompt")] 
+    public string Prompt { get; set; } = Prompt;
 
-    [JsonPropertyName("suffix")] public string Suffix { get; set; } = "";
+    [JsonPropertyName("suffix")] 
+    public string Suffix { get; set; } = "";
+
     [JsonPropertyName("template")]
     public string? Template { get; set; }
 
     [JsonPropertyName("context")]
-    public string? Context { get; set; }
+    public int? Context { get; set; }
     [JsonPropertyName("stream")]
     public bool? Stream { get; set; }
     [JsonPropertyName("raw")]

@@ -10,7 +10,7 @@ namespace Ollama.Payloads
             return new GeneratePayload(request.Prompt)
             {
                 Stream = request.Stream,
-                ModelName = request.ModelName,
+                Model = request.ModelName,
                 Options = request.Options,
                 Context = request.Context,
                 Template = request.Template,
@@ -25,7 +25,7 @@ namespace Ollama.Payloads
             return new GeneratePayload<T>(request.Prompt)
             {
                 Stream = request.Stream,
-                ModelName = request.ModelName,
+                Model = request.ModelName,
                 Options = request.Options,
                 Context = request.Context,
                 Template = request.Template,

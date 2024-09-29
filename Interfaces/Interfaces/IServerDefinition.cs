@@ -4,7 +4,7 @@
     {
         string Name { get; set; }
         string Description { get; set; }
-        List<string> Models { get; set; }
+        string DefaultModel { get; set; }
         int Priority { get; set; }
         public bool Available { get; set; }
         int Speed { get; set; }

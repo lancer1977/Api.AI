@@ -58,7 +58,7 @@ public class AiService : IAIService, ILoadAsync
     {
         try
         {
-            var endpoint = ApiUrl + "/api/chat";
+            var endpoint = ApiUrl + "/api/chat"; 
             Debug.WriteLine(endpoint);
             var content = GetContent(payload);
             Debug.WriteLine(await content.ReadAsStringAsync());
@@ -71,13 +71,6 @@ public class AiService : IAIService, ILoadAsync
             throw;
         }
     }
-
-    //public Task<AiResponseType> GetResponseAsync(string prompt)
-    //{
-    //    var payload = new AiRequestType(prompt);
-    //    return GetResponseAsync(payload);
-    //}
-
  
  
     public async Task<AiResponseType> GetResponseAsync(AiRequestType payload)
@@ -90,12 +83,7 @@ public class AiService : IAIService, ILoadAsync
         return responseList;
 
     }
-
-    //public async Task<AiResponseType<T?>> GetResponseAsync<T>(AiRequestType<T> request)
-    //{
-    //    var response = await GetGenerateResponse(request);
-    //    return await response.Create<T?>();
-    //}
+ 
 
     public async IAsyncEnumerable<string> GetResponseStream(AiRequestType payload)
     {

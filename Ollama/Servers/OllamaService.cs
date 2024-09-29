@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
 using PolyhydraGames.Ollama.Models;
@@ -12,17 +13,19 @@ namespace PolyhydraGames.Ollama.Servers;
 public class OllamaService : IOllamaService, ILoadAsync
 {
     private readonly IOllamaConfig _config;
+    private readonly ILogger<OllamaService> _logger;
 
     //private readonly IOllamaConfig _config;
     private string ApiUrl => _config.ApiUrl;
     private string DefaultModel => _config.DefaultModel;
     readonly HttpClient _client;
     private readonly JsonSerializerOptions _options;
-    private List<ModelDetail> Models { get; set; }
-    private List<string> ModelNames { get; set; }
-    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config)
+    private List<ModelDetail>? Models { get; set; }
+    private List<string>? ModelNames { get; set; }
+    public OllamaService(IHttpClientFactory clientFactory, IOllamaConfig config, ILogger<OllamaService> logger)
     {
         _config = config;
+        _logger = logger;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
         _client = clientFactory.CreateClient();
     }
@@ -34,19 +37,11 @@ public class OllamaService : IOllamaService, ILoadAsync
         ModelNames = Models.Select(x => x.Model).ToList();
     }
     private StringContent GetContent(GeneratePayload payload)
-    {
-        if (!ModelNames.Any())
-        {
-            throw new NullReferenceException("No models loaded");
-        }
-        if (string.IsNullOrEmpty(payload.Model) || !ModelNames.Contains(payload.Model))
-        {
-            payload.Model = DefaultModel;
-        }
+    { 
         var jsonPayload = JsonSerializer.Serialize(payload);
         var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
         return content;
-        }
+    }
 
     private StringContent GetContent(ChatPayload payload)
     {
@@ -64,9 +59,9 @@ public class OllamaService : IOllamaService, ILoadAsync
         try
         {
             var endpoint = ApiUrl + "/api/generate";
-            Debug.WriteLine(endpoint);
+            _logger.LogInformation(endpoint);
             var content = GetContent(payload);
-            var response = await _client.PostAsync(endpoint,content);
+            var response = await _client.PostAsync(endpoint, content);
             return response;
         }
         catch (HttpRequestException e)
@@ -80,9 +75,8 @@ public class OllamaService : IOllamaService, ILoadAsync
         try
         {
             var endpoint = ApiUrl + "/api/chat";
-            Debug.WriteLine(endpoint);
+            _logger.LogInformation(endpoint);
             var content = GetContent(payload);
-            Debug.WriteLine(await content.ReadAsStringAsync());
             var response = await _client.PostAsync(endpoint, content);
             return response;
         }
@@ -95,7 +89,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
     public Task<AiResponseType> GetResponseAsync(string prompt)
     {
-        var payload = prompt.ToGeneratePayload();
+        var payload = prompt.ToGeneratePayload(DefaultModel);
         return GetResponseAsync(payload);
     }
 
@@ -114,7 +108,7 @@ public class OllamaService : IOllamaService, ILoadAsync
 
         Console.WriteLine($"Response: {responseBody}");
         var ollamaResponse = JsonSerializer.Deserialize<OllamaResponse>(responseBody);
-        return    (ollamaResponse?.Response).Create();
+        return (ollamaResponse?.Response).Create();
     }
 
     public async Task<AiResponseType> GetResponseAsync(ChatPayload payload)
@@ -150,6 +144,7 @@ public class OllamaService : IOllamaService, ILoadAsync
     public async Task<ModelResponse> GetModels()
     {
         var endpoint = ApiUrl + "/api/tags";
+        _logger.LogInformation(endpoint);
         var response = await _client.GetAsync(endpoint);
         var raw = await response.Content.ReadAsStringAsync();
         var models = JsonSerializer.Deserialize<ModelResponse>(raw);

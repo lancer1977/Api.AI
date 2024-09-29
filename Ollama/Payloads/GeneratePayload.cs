@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace PolyhydraGames.Ollama.Payloads;
 
-public record GeneratePayload<T>(string Prompt): GeneratePayload(Prompt);
-public record GeneratePayload(string Prompt)
+public record GeneratePayload<T>(string Prompt, string Model) : GeneratePayload(Prompt,Model);
+public record GeneratePayload(string Prompt, string Model)
 {
     /// <summary>
     /// a duration string (such as "10m" or "24h")
@@ -13,10 +13,7 @@ public record GeneratePayload(string Prompt)
     //'0' which will unload the model immediately after generating a response
     /// </summary>
     [JsonPropertyName("format")]
-    public string? Format { get; set; } = "";
-
-    [JsonPropertyName("model")]
-    public string? Model { get; set; }
+    public string? Format { get; set; } = ""; 
 
     [JsonPropertyName("options")]
     public string? Options { get; set; }
@@ -35,8 +32,9 @@ public record GeneratePayload(string Prompt)
 
     [JsonPropertyName("context")]
     public int? Context { get; set; }
-    [JsonPropertyName("stream")]
-    public bool? Stream { get; set; }
+
+    [JsonPropertyName("stream")] 
+    public bool Stream { get; set; } = false;
     [JsonPropertyName("raw")]
     public bool Raw { get; set; }
     [JsonPropertyName("keep_alive")]

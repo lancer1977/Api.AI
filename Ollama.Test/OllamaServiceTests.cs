@@ -1,6 +1,6 @@
-using System.Diagnostics;
-using System.Net.Http;
+using System.Diagnostics; 
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.Ollama.Host;
@@ -19,7 +19,14 @@ public class OllamaServiceTests
     public IOllamaHostApi HostApi { get; set; }
     public OllamaService Service { get; init; } 
     public IHttpClientFactory HttpClientFactory { get; set; }
-
+    public ILoggerFactory _loggerFactory;
+    private string DefaultModel = "llama3.2";
+    [OneTimeTearDown]
+    public void Cleanup()
+    {
+        _loggerFactory.Dispose();
+        _loggerFactory = null;
+    }
     [TestCase("Tell everyone you love them")]
     public async Task TestAddMessage(string message)
     {
@@ -27,10 +34,10 @@ public class OllamaServiceTests
         var result = await HostApi.AddMessage(msg);
         Assert.That(result);
     }
-    [Test]
-    public async Task GetOllamaResponse()
+    [TestCase("llama3.2", "Who is the best band ever?")]
+    public async Task GetOllamaResponse(string model, string payload)
     { 
-        var response = await Service.GetResponseAsync(new GeneratePayload("Who is the best band ever?"));
+        var response = await Service.GetResponseAsync(new GeneratePayload(payload,model));
         Assert.That(response != null);
     }
     [Test]
@@ -49,7 +56,7 @@ public class OllamaServiceTests
     [Test]
     public async Task GetOllamaResponseList()
     {
-        var response = Service.GetResponseStream(new GeneratePayload("What do you think of modern punk like the green day?"));
+        var response = Service.GetResponseStream(new GeneratePayload(DefaultModel, "What do you think of modern punk like the green day?"));
         await foreach (var item in response)
         {
             Debug.Write(item);
@@ -95,7 +102,7 @@ public class OllamaServiceTests
     [TestCase("Lancero","Nirvana - Heart Shaped Box", 80)]
     public async Task GetOllamaResponseList(string user,string song, int popularity)
     { 
-        var response = Service.GetResponseStream(new GeneratePayload($"What do you think of {user} and their song {song} which is {popularity} popular?"));
+        var response = Service.GetResponseStream(new GeneratePayload(DefaultModel, $"What do you think of {user} and their song {song} which is {popularity} popular?"));
  
         await foreach (var item in response)
         {
@@ -106,13 +113,14 @@ public class OllamaServiceTests
     }
     public OllamaServiceTests()
     {
-
+        
         _configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .SetBasePath(Directory.GetCurrentDirectory()) // Set the base path to the test project
             .AddUserSecrets("65a2f916-1765-44e8-8d59-2d2ddcd7cc9b") // Use the UserSecretsId generated earlier
             .Build();
-
+        _loggerFactory = new LoggerFactory();
+        _loggerFactory.AddProvider(new Microsoft.Extensions.Logging.Debug.DebugLoggerProvider());
         HostConfig = new OllamaHostSiteConfig()
         {
             Url = _configuration["Host:Url"],
@@ -133,7 +141,7 @@ public class OllamaServiceTests
 
         HostApi = new OllamaHostApi(HostConfig);
 
-        Service = new OllamaService(HttpClientFactory, Config);
+        Service = new OllamaService(HttpClientFactory, Config, _loggerFactory.CreateLogger< OllamaService>());
     }
 
 }

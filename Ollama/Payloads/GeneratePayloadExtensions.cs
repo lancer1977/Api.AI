@@ -15,10 +15,9 @@ public static class GeneratePayloadExtensions
 
     public static GeneratePayload ToGeneratePayload(this AiRequestType request)
     {
-        return new GeneratePayload(request.Prompt)
+        return new GeneratePayload(request.Prompt,request.ModelName )
         {
-            Stream = request.Stream,
-            Model = request.ModelName,
+            Stream = request.Stream ?? false, 
             Options = request.Options,
             Context = request.Context,
             Template = request.Template,
@@ -30,9 +29,9 @@ public static class GeneratePayloadExtensions
     }
 
 
-    public static GeneratePayload ToGeneratePayload(this string prompt)
+    public static GeneratePayload ToGeneratePayload(this string prompt, string modelName)
     {
-        return new GeneratePayload(prompt);
+        return new GeneratePayload(prompt, modelName);
     }
 
     public static GeneratePayload WithMinutes(this GeneratePayload payload, int minutes = 10)

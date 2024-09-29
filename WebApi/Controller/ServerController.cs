@@ -4,12 +4,12 @@ using PolyhydraGames.AI.Models;
 
 namespace PolyhydraGames.AI.WebApi.Controller;
 [ApiController]
-[Route("api")]
-public class ServerController : ControllerBase
+[Route("[controller]")]
+public class AiController : ControllerBase
 {
     public readonly IServerSource _source;
 
-    public ServerController(IServerSource viewerService)
+    public AiController(IServerSource viewerService)
     {
         _source = viewerService;
     }
@@ -41,4 +41,5 @@ public class ServerController : ControllerBase
             return  new AiResponseType(ex.Message);
         }
     }
+
 }

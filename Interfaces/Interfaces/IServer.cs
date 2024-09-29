@@ -5,7 +5,8 @@ namespace PolyhydraGames.AI.Interfaces;
 public interface IAIService
 {
     Task LoadAsync();
-    Task<bool> CheckHealth();
+    Task<bool> HealthCheck();
+    
     Task<AiResponseType> GetResponseAsync(AiRequestType request); 
     IAsyncEnumerable<string> GetResponseStream(AiRequestType request);
     Task<IEnumerable<PersonalityType>> GetModels();

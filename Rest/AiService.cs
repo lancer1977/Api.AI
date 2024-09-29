@@ -5,25 +5,26 @@ using System.Text.Json.Serialization;
 using PolyhydraGames.AI.Interfaces;
 using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
+using PolyhydraGames.Core.RestfulService;
 
 namespace PolyhydraGames.AI.Rest;
 
-public class AiRestService : IAIService, ILoadAsync
-{
-    private readonly IAIRestConfig _config;
-
-    //private readonly IOllamaConfig _config;
-    private string ApiUrl => _config.ApiUrl;
-    private string DefaultModel => _config.Key;
-    readonly HttpClient _client;
+public class AiRestService : RestServiceBase, IAIService, ILoadAsync
+{ 
     private readonly JsonSerializerOptions _options;
     private List<PersonalityType> Personalities { get; set; }
     private List<string> PersonalityNames { get; set; }
-    public AiRestService(HttpClient clientFactory, IAIRestConfig config)
+    public Task<IEnumerable<PersonalityType>> GetModels()
     {
-        _config = config;
+        throw new NotImplementedException();
+    }
+
+    public string Type { get; set; }
+    protected override string Service { get; } = "AI";
+    public AiRestService(IEndpointFactory endpoint, IHttpService httpService) : base(endpoint,httpService)
+    { 
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-        _client = clientFactory;
+    
     }
 
     public async Task LoadAsync()
@@ -39,98 +40,44 @@ public class AiRestService : IAIService, ILoadAsync
         return content;
     }
  
-    private async Task<HttpResponseMessage> GetGenerateResponse(AiRequestType payload)
+    private   Task<AiResponseType> Generate(AiRequestType payload)
     {
-        try
-        {
-            var endpoint = ApiUrl + "/api/generate";
-            Debug.WriteLine(endpoint);
-            var response = await _client.PostAsync(endpoint, GetContent(payload));
-            return response;
-        }
-        catch (HttpRequestException e)
-        {
-            Console.WriteLine($"Request error: {e.Message}");
-            throw;
-        }
+        return Post<AiResponseType, AiRequestType>(payload);
     }
-    public async Task<HttpResponseMessage> GetChatResponse(AiRequestType payload)
+    public   Task<AiResponseType> Chat(AiRequestType payload)
     {
-        try
-        {
-            var endpoint = ApiUrl + "/api/chat"; 
-            Debug.WriteLine(endpoint);
-            var content = GetContent(payload);
-            Debug.WriteLine(await content.ReadAsStringAsync());
-            var response = await _client.PostAsync(endpoint, content);
-            return response;
-        }
-        catch (HttpRequestException e)
-        {
-            Console.WriteLine($"Request error: {e.Message}");
-            throw;
-        }
+        return Post<AiResponseType, AiRequestType>(payload);
+      
     }
- 
- 
+
+
     public async Task<AiResponseType> GetResponseAsync(AiRequestType payload)
     {
-        var response = await GetChatResponse(payload);
-
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseList = JsonSerializer.Deserialize<AiResponseType>(responseBody);
-        return responseList;
-
+        throw new NotImplementedException("GetResponseAsync");
     }
- 
 
-    public async IAsyncEnumerable<string> GetResponseStream(AiRequestType payload)
+    public IAsyncEnumerable<string> GetResponseStream(AiRequestType request)
     {
-        var response = await GetGenerateResponse(payload);
-
-        // Check if the request was successful
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new HttpRequestException($"Failed to call API. Status code: {response.StatusCode}");
-        }
-
-        await using var stream = await response.Content.ReadAsStreamAsync();
-        using var reader = new StreamReader(stream);
-        while (await reader.ReadLineAsync() is { } line)
-        {
-            var local = JsonSerializer.Deserialize<AiResponseType>(line, _options);
-            yield return local.Message;
-        }
-    }
-
-    public async Task<IEnumerable<PersonalityType>> GetModels()
-    { 
-
-        var endpoint = ApiUrl + "/v1/models"; 
-        var response = await _client.GetAsync(endpoint);
-        var organized = response.IsSuccessStatusCode;
-        var items = JsonSerializer.Deserialize<List<PersonalityType>>(await response.Content.ReadAsStringAsync() ?? "");
-
-        return items;
+        throw new NotImplementedException();
     }
 
 
-    public string Type { get; set; }
+    public   Task<List<ServerDefinitionType>> GetServerDefinitions()
+    {
+        return Get<List<ServerDefinitionType>>("Items");
+    }
+
+
+
 
     public async Task<List<IPersonality>> GetPersonalities()
     {
-        var endpoint = ApiUrl + "/api/tags";
-        var response = await _client.GetAsync(endpoint);
-        var raw = await response.Content.ReadAsStringAsync();
-        var model = JsonSerializer.Deserialize<List<PersonalityType>>(raw);
-        return model?.Cast<IPersonality>().ToList() ?? throw new NullReferenceException("GetModels returned a null response");
+        var result = await Get<List<PersonalityType>>();
+        return result?.Cast<IPersonality>().ToList() ?? throw new NullReferenceException("GetModels returned a null response");
     }
     public async Task<bool> CheckHealth()
     {
-        var endpoint = ApiUrl + "";
-        var response = await _client.GetAsync(endpoint);
-        return response.IsSuccessStatusCode;
+        return await Get<bool>(); 
     }
      
     public async IAsyncEnumerable<T> MakePostRequest<T>(string apiUrl, string postData)
@@ -155,4 +102,5 @@ public class AiRestService : IAIService, ILoadAsync
             yield return JsonSerializer.Deserialize<T>(line, _options);
         }
     }
+
 }

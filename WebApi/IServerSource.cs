@@ -2,12 +2,12 @@
 using PolyhydraGames.AI.Models;
 using System.Collections.ObjectModel;
 
-namespace PolyhydraGames.AI.WebApi.Controller
+namespace PolyhydraGames.AI.WebApi
 {
     public interface IServerSource
     {
-        Task<AiResponseType> GetResponseAsync(AiRequestType request); 
-         Task LoadAsync(List<ServerDefinitionType> definitions);
+        Task<AiResponseType> GetResponseAsync(AiRequestType request);
+        Task LoadAsync(List<ServerDefinitionType> definitions);
         Task AddOrUpdateServer(ServerDefinitionType server);
         IEnumerable<ServerDefinitionType> Definitions();
         IEnumerable<IAIService> Items();

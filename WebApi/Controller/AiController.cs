@@ -6,11 +6,11 @@ namespace PolyhydraGames.AI.WebApi.Controller;
 
 [Route("[controller]")]
 [ApiController]
-public class AiController : ControllerBase
+public class  ServerController : ControllerBase
 {
     private readonly IServerSource _viewerService;
 
-    public AiController(IServerSource viewerService)
+    public ServerController(IServerSource viewerService)
     {
         _viewerService = viewerService;
     }

@@ -2,11 +2,13 @@
 using PolyhydraGames.AI.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PolyhydraGames.AI.WebApi.Controller;
+namespace PolyhydraGames.AI.WebApi;
 
 public class ServerSource : IServerSource
 {
     private bool _initialized;
+    private readonly IServerSource _viewerService;
+
     private readonly ILogger<ServerSource> _logger;
     private readonly IHttpClientFactory _clientFactory;
     private readonly Dictionary<ServerDefinitionType, IAIService> _servers = new Dictionary<ServerDefinitionType, IAIService>();
@@ -18,13 +20,13 @@ public class ServerSource : IServerSource
 
         var section = config.GetSection("OllamaItems");
         var types = section.Get<List<ServerDefinitionType>>();
-        foreach(var type in types)
+        foreach (var type in types)
         {
             type.Id = Guid.NewGuid();
         }
         var source = provider.GetRequiredService<IServerSource>();
-     
-       await  source.LoadAsync(types);
+
+        await source.LoadAsync(types);
         return source;
     }
 
@@ -54,12 +56,12 @@ public class ServerSource : IServerSource
                     server.Key.Available = false;
                     _logger.LogError(ex, "Exception calling checkhealth for " + server.Key.Name);
                 }
-                    _logger.LogInformation(server.Key.Name + " checkhealth:" + server.Key.Available);
+                _logger.LogInformation(server.Key.Name + " checkhealth:" + server.Key.Available);
 
 
 
             }
-            _logger.LogInformation("Healthy Servers:" +string.Join(", ",ReadOnlyServers.Keys.Where(x=>x.Available).Select(x=>x.Name)));
+            _logger.LogInformation("Healthy Servers:" + string.Join(", ", ReadOnlyServers.Keys.Where(x => x.Available).Select(x => x.Name)));
         });
     }
 
@@ -76,7 +78,7 @@ public class ServerSource : IServerSource
 
         foreach (var def in definitions)
         {
-            
+
             var service = await _clientFactory.GetNewService(def);
             _servers.Add(def, service);
         }
@@ -86,11 +88,7 @@ public class ServerSource : IServerSource
     {
         return GetService().GetResponseAsync(request);
     }
-
-    /// <summary>
-    /// So this is where the sauce occurs, we find the most availiabvle IAIService and use it.
-    /// </summary>
-    /// <returns></returns>
+ 
     private IAIService GetService()
     {
         var key = _servers.Keys
@@ -98,6 +96,7 @@ public class ServerSource : IServerSource
             .OrderBy(x => x.Priority)
             .ThenBy(x => x != _lastDefinition)
             .First();
+        _lastDefinition = key;
         return _servers[key];
     }
     public IAIService GetService(ServerDefinitionType definition)
@@ -121,6 +120,6 @@ public class ServerSource : IServerSource
         return Task.CompletedTask;
     }
 
-    public IEnumerable<ServerDefinitionType> Definitions()=> _servers.Keys; 
-    public IEnumerable<IAIService> Items() => _servers.Values; 
+    public IEnumerable<ServerDefinitionType> Definitions() => _servers.Keys;
+    public IEnumerable<IAIService> Items() => _servers.Values;
 }

@@ -11,7 +11,7 @@ public static class ServerDefinitionExtensions
         {
             ApiUrl = server.Address,
             Background = server.Description,
-            DefaultModel = server.Mo,
+            DefaultModel = server.DefaultModel,
             //Key = server.Id
         };
 

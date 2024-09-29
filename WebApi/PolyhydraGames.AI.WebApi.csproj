@@ -33,12 +33,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Seq.Extensions.Logging" Version="8.0.0" />
-    <PackageReference Include="PolyhydraGames.AI" Version="1.0.0.30" />
+    <PackageReference Include="PolyhydraGames.AI" Version="1.0.0.31" />
 	</ItemGroup> 
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ollama\Ollama.csproj" />
-  </ItemGroup>
  
   <ItemGroup>
     <PackageReference Update="SonarAnalyzer.CSharp" Version="8.55.0.65544" />

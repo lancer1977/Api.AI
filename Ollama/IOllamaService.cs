@@ -1,8 +1,8 @@
-﻿using Ollama.Models;
-using Ollama.Payloads;
-using PolyhydraGames.AI.Models;
+﻿using PolyhydraGames.AI.Models;
+using PolyhydraGames.Ollama.Models;
+using PolyhydraGames.Ollama.Payloads;
 
-namespace Ollama;
+namespace PolyhydraGames.Ollama;
 
 public interface IOllamaService
 {

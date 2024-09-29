@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
-using Microsoft.VisualBasic.CompilerServices;
 
-namespace Ollama.Payloads;
+namespace PolyhydraGames.Ollama.Payloads;
 
 public record GeneratePayload<T>(string Prompt): GeneratePayload(Prompt);
 public record GeneratePayload(string Prompt)

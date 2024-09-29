@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using Ollama.Models;
+using PolyhydraGames.Ollama.Models;
 
-namespace Ollama.Payloads;
+namespace PolyhydraGames.Ollama.Payloads;
 
 public class ChatPayload
 {

@@ -2,13 +2,12 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Ollama.Models;
-using Ollama.Payloads;
-using PolyhydraGames.AI;
 using PolyhydraGames.AI.Models;
 using PolyhydraGames.Core.Interfaces;
+using PolyhydraGames.Ollama.Models;
+using PolyhydraGames.Ollama.Payloads;
 
-namespace Ollama.Ollama;
+namespace PolyhydraGames.Ollama.Servers;
 
 public class OllamaService : IOllamaService, ILoadAsync
 {

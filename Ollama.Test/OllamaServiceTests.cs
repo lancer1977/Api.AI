@@ -2,12 +2,11 @@ using System.Diagnostics;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Ollama;
-using Ollama.Host;
-using Ollama.Models;
-using Ollama.Ollama;
-using Ollama.Payloads;
-using PolyhydraGames.AI.Interfaces; 
+using PolyhydraGames.AI.Interfaces;
+using PolyhydraGames.Ollama.Host;
+using PolyhydraGames.Ollama.Models;
+using PolyhydraGames.Ollama.Payloads;
+using PolyhydraGames.Ollama.Servers;
 
 namespace PolyhydraGames.Ollama.Test;
 

@@ -1,8 +1,7 @@
-﻿using Ollama.Models;
-using PolyhydraGames.AI.Models;
-using System.IO;
+﻿using PolyhydraGames.AI.Models;
+using PolyhydraGames.Ollama.Models;
 
-namespace Ollama.Payloads;
+namespace PolyhydraGames.Ollama.Payloads;
 
 public static class GeneratePayloadExtensions
 {

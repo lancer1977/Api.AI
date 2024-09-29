@@ -16,6 +16,8 @@
 		<!-- Copyright and trademark information -->
 		<Copyright>(c) 2024 Polyhydra Games. All rights reserved.</Copyright>
 		<Trademark>Trademark of Polyhydra Games.</Trademark>
+		<RootNamespace>PolyhydraGames.Ollama</RootNamespace>
+		<AssemblyName>PolyhydraGames.Ollama</AssemblyName>
 
 	</PropertyGroup>
 

@@ -1,6 +1,6 @@
 ﻿namespace PolyhydraGames.AI.Rest;
 
-public interface IOllamaConfig
+public interface IAIRestConfig
 {
     public string ApiUrl { get; }
 

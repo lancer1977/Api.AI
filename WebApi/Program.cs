@@ -54,6 +54,7 @@ app.UseOwnerMiddleware();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseAuthorization(); 
+app.MapHealthChecks("/healthcheck");
 await ServerSource.InitializeAsync(app);
 app.Run();
 

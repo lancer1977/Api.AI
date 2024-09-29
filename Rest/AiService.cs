@@ -8,9 +8,9 @@ using PolyhydraGames.Core.Interfaces;
 
 namespace PolyhydraGames.AI.Rest;
 
-public class AiService : IAIService, ILoadAsync
+public class AiRestService : IAIService, ILoadAsync
 {
-    private readonly IOllamaConfig _config;
+    private readonly IAIRestConfig _config;
 
     //private readonly IOllamaConfig _config;
     private string ApiUrl => _config.ApiUrl;
@@ -19,7 +19,7 @@ public class AiService : IAIService, ILoadAsync
     private readonly JsonSerializerOptions _options;
     private List<PersonalityType> Personalities { get; set; }
     private List<string> PersonalityNames { get; set; }
-    public AiService(HttpClient clientFactory, IOllamaConfig config)
+    public AiRestService(HttpClient clientFactory, IAIRestConfig config)
     {
         _config = config;
         _options = new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };

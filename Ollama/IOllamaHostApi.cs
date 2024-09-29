@@ -1,6 +1,6 @@
-﻿using Ollama.Models;
+﻿using PolyhydraGames.Ollama.Models;
 
-namespace Ollama;
+namespace PolyhydraGames.Ollama;
 
 public interface IOllamaHostApi
 {

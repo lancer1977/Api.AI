@@ -1,7 +1,7 @@
-﻿using Ollama.Ollama;
-using PolyhydraGames.AI.Models;
+﻿using PolyhydraGames.AI.Models;
+using PolyhydraGames.Ollama.Servers;
 
-namespace Ollama;
+namespace PolyhydraGames.Ollama;
 
 public static class ServerDefinitionExtensions
 {

@@ -11,9 +11,6 @@ using PolyhydraGames.Core.RestfulService;
 
 namespace PolyhydraGames.AI.Rest;
 
-public interface IAIEndpoint : IEndpointFactory{
-
-}
 public class AiRestService : RestServiceBase, IAIService, ILoadAsync
 {
     private readonly JsonSerializerOptions _options;

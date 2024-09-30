@@ -15,10 +15,6 @@ builder.Services.AddSwaggerGen()
     {
         x.AddConsole();
         x.AddSeq(builder.Configuration.GetSection("Seq"));
-
-#if !DEBUG
- x.AddApplicationInsights(configureTelemetryConfiguration: (config) => config.ConnectionString = builder.Configuration.GetConnectionString("MSInsights"), configureApplicationInsightsLoggerOptions: (options) => { });
-#endif
     })
     .AddScoped<IIdentityService, ApiIdentityService>()
     .AddSingleton<IServerSource, ServerSource>();

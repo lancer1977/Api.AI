@@ -91,13 +91,13 @@ public class ServerSource : IServerSource
     {
         return GetService().GetResponseAsync(request);
     }
- 
+
     private IAIService GetService()
     {
         var key = _servers.Keys
-            .Where(x => x.Available)
-            .OrderBy(x => x.Priority)
-            .ThenBy(x => x != _lastDefinition)
+            .Where(x => x.Available).OrderBy(x => x != _lastDefinition)
+            .ThenBy(x => x.Priority)
+
             .First();
         _lastDefinition = key;
         return _servers[key];

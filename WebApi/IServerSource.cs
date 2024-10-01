@@ -13,5 +13,6 @@ namespace PolyhydraGames.AI.WebApi
         IEnumerable<IAIService> Items();
         void HealthCheck();
         IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers { get; }
+
     }
 }

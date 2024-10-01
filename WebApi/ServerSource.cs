@@ -87,9 +87,20 @@ public class ServerSource : IServerSource
         }
     }
 
-    public Task<AiResponseType> GetResponseAsync(AiRequestType request)
+    public async Task<AiResponseType> GetResponseAsync(AiRequestType request)
     {
-        return GetService().GetResponseAsync(request);
+        var service = GetService();
+        try
+        {
+            return await service.GetResponseAsync(request);
+
+        }
+        catch (Exception ex)
+        {
+            var key = _servers.Where(x => x.Value == service).Select(x => x.Key).First();
+            key.Available = false;
+            return new AiResponseType(ex.Message);
+        }
     }
 
     private IAIService GetService()

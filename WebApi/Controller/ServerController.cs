@@ -28,18 +28,10 @@ public class AiController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<AiResponseType> Generate(AiRequestType server)
+    public async Task<AiResponseType> Generate(AiRequestType request)
     {
-        try
-        {
-
-            var src = await _source.GetResponseAsync(server);
-            return src;
-        }
-        catch(Exception ex)
-        {
-            return  new AiResponseType(ex.Message);
-        }
+        return await _source.GetResponseAsync(request);
+    
     }
 
 }

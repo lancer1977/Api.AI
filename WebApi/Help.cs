@@ -1,6 +1,4 @@
-﻿using PolyhydraGames.AI.Interfaces;
-using PolyhydraGames.AI.Models;
-using PolyhydraGames.Ollama;
+﻿using PolyhydraGames.Ollama;
 using PolyhydraGames.Ollama.Servers;
 
 namespace PolyhydraGames.AI.WebApi;

@@ -1,7 +1,4 @@
-﻿using PolyhydraGames.AI.Interfaces;
-using PolyhydraGames.AI.Models;
-using PolyhydraGames.Ollama.Servers;
-using Swashbuckle.AspNetCore.SwaggerGen;
+﻿using PolyhydraGames.Ollama.Servers; 
 
 namespace PolyhydraGames.AI.WebApi;
 
@@ -16,7 +13,7 @@ public class ServerSource : IServerSource
     private readonly Dictionary<ServerDefinitionType, IAIService> _servers = new Dictionary<ServerDefinitionType, IAIService>();
     public IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers => _servers;
     private ServerDefinitionType? _lastDefinition;
-    private Timer _healthTimer;
+    private System.Timers.Timer _healthTimer;
     private static async Task<IServerSource> InitializeAsync(IConfiguration config, IServiceProvider provider)
     {
 
@@ -40,6 +37,7 @@ public class ServerSource : IServerSource
 
     public void HealthCheck()
     {
+        _logger.LogInformation(" Starting checkhealth:" );
         Task.Run(async () =>
         {
             foreach (var server in ReadOnlyServers)
@@ -72,8 +70,12 @@ public class ServerSource : IServerSource
         _logger = logger;
         _clientFactory = clientFactory;
         _loggerFactory = loggerFactory;
-        _healthTimer = new Timer(_ => HealthCheck(), null, Timeout.Infinite, Timeout.Infinite);
-        _healthTimer.Change(1 * 5 * 1000, Timeout.Infinite);
+        _healthTimer = new System.Timers.Timer();
+        _healthTimer.Elapsed += (sender, args) => HealthCheck();
+        _healthTimer.AutoReset = true;
+        _healthTimer.Interval = 2 * 60 * 1000;
+        _healthTimer.Start();
+        
     }
 
     public async Task LoadAsync(List<ServerDefinitionType> definitions)

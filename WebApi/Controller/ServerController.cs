@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PolyhydraGames.AI.Interfaces;
-using PolyhydraGames.AI.Models;
 
 namespace PolyhydraGames.AI.WebApi.Controller;
 [ApiController]

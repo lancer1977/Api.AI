@@ -1,0 +1,29 @@
+
+ [
+
+    {
+      "Name": "AlienWare",
+      "Description": "This is the home page of the Ollama API",
+      "Priority": 3,
+      "Address": "http://192.168.0.169:11434",
+      "Type": "Ollama",
+      "DefaultModel": "llama3.2:latest"
+    },
+    {
+      "Name": "LancePC",
+      "Description": "Lanceros PC",
+      "Priority": 1,
+      "Address": "http://192.168.0.133:11434",
+      "Type": "Ollama",
+      "DefaultModel": "llama3.2:latest"
+    },
+    {
+      "Name": "Macbook",
+      "Description": "Work Mac",
+      "Priority": 2,
+      "Address": "http://192.168.0.157:11434",
+      "Type": "Ollama",
+      "DefaultModel": "llama3.2:latest"
+    }
+  ]
+

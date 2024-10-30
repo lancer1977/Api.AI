@@ -36,6 +36,12 @@
     <PackageReference Include="PolyhydraGames.AI" Version="1.0.0.33" />
 	</ItemGroup> 
 
+  <ItemGroup>
+    <Content Update="config\servers.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup> 
+
  
   <ItemGroup>
     <PackageReference Update="SonarAnalyzer.CSharp" Version="8.55.0.65544" />

@@ -1,7 +1,37 @@
-﻿using PolyhydraGames.Ollama.Servers; 
+﻿using Microsoft.ApplicationInsights.Extensibility.Implementation;
+using Microsoft.Extensions.Configuration.UserSecrets;
+using PolyhydraGames.Ollama.Servers; 
 
 namespace PolyhydraGames.AI.WebApi;
 
+
+/// <summary>
+/// Data is placed under the "config" directory
+/// </summary>
+public static class DataHelper
+{
+
+    private static string RootDirectory => Path.Join(AppDomain.CurrentDomain.BaseDirectory, "config");
+
+    static DataHelper()
+    {
+        if (Path.Exists(RootDirectory)) return;
+        Directory.CreateDirectory(RootDirectory);
+    }
+    public static string GetFilePath(string name)
+    {
+        return Path.Join(RootDirectory, name);
+    }
+    
+    public static T GetFile<T>(string filename)
+    {
+        var completeName = GetFilePath(filename);
+        var txt = File.ReadAllText(completeName);
+        var value = System.Text.Json.JsonSerializer.Deserialize<T>(txt);
+        return value;
+    }
+ 
+}
 public class ServerSource : IServerSource
 {
     private bool _initialized;
@@ -14,11 +44,10 @@ public class ServerSource : IServerSource
     public IReadOnlyDictionary<ServerDefinitionType, IAIService> ReadOnlyServers => _servers;
     private ServerDefinitionType? _lastDefinition;
     private System.Timers.Timer _healthTimer;
-    private static async Task<IServerSource> InitializeAsync(IConfiguration config, IServiceProvider provider)
+ 
+    private static async Task<IServerSource> InitializeAsync( IServiceProvider provider)
     {
-
-        var section = config.GetSection("OllamaItems");
-        var types = section.Get<List<ServerDefinitionType>>();
+        var types = DataHelper.GetFile<List<ServerDefinitionType>>("servers.json");  
         foreach (var type in types)
         {
             type.Id = Guid.NewGuid();
@@ -31,7 +60,7 @@ public class ServerSource : IServerSource
 
     public static async Task InitializeAsync(WebApplication provider)
     {
-        var source = await InitializeAsync(provider.Configuration, provider.Services);
+        var source = await InitializeAsync( provider.Services);
         source.HealthCheck();
     }
 
